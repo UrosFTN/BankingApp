@@ -50,7 +50,7 @@ const start = async () => {
     });
 
     fastify.log.info(
-      `🚀 API Gateway running on http://${serverConfig.host}:${serverConfig.port}`,
+      `API Gateway running on http://${serverConfig.host}:${serverConfig.port}`,
     );
   } catch (err) {
     fastify.log.error(err);
