@@ -1,0 +1,137 @@
+syntax = "proto3";
+
+package auth;
+
+service AuthService {
+  // User Registration & Login
+  rpc Register (RegisterRequest) returns (AuthResponse);
+  rpc Login (LoginRequest) returns (AuthResponse);
+  rpc LoginWithDevice (DeviceLoginRequest) returns (AuthResponse);
+  
+  // Token Management
+  rpc RefreshToken (RefreshTokenRequest) returns (AuthResponse);
+  rpc RevokeToken (RevokeTokenRequest) returns (EmptyResponse);
+  rpc ValidateToken (ValidateTokenRequest) returns (ValidateTokenResponse);
+  
+  // Device Management
+  rpc RegisterDevice (RegisterDeviceRequest) returns (RegisterDeviceResponse);
+  rpc GetUserDevices (GetUserDevicesRequest) returns (GetUserDevicesResponse);
+  rpc RevokeDevice (RevokeDeviceRequest) returns (EmptyResponse);
+  
+  // Password Management
+  rpc RequestPasswordReset (PasswordResetRequest) returns (PasswordResetResponse);
+  rpc ResetPassword (ResetPasswordRequest) returns (EmptyResponse);
+  rpc ChangePassword (ChangePasswordRequest) returns (EmptyResponse);
+}
+
+// ============ Messages ============
+
+// Registration
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+}
+
+// Login
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message DeviceLoginRequest {
+  string device_token = 1;
+}
+
+// Auth Response (used for login, register, refresh)
+message AuthResponse {
+  bool success = 1;
+  string message = 2;
+  string user_id = 3;
+  string email = 4;
+  string role = 5;
+  string access_token = 6;
+  string refresh_token = 7;
+}
+
+// Token Operations
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+message RevokeTokenRequest {
+  string refresh_token = 1;
+}
+
+message ValidateTokenRequest {
+  string access_token = 1;
+}
+
+message ValidateTokenResponse {
+  bool valid = 1;
+  string user_id = 2;
+  string email = 3;
+  string role = 4;
+  string message = 5;
+}
+
+// Device Management
+message RegisterDeviceRequest {
+  string user_id = 1;
+  string device_id = 2;
+  string device_name = 3;
+}
+
+message RegisterDeviceResponse {
+  bool success = 1;
+  string message = 2;
+  string device_token = 3;
+}
+
+message GetUserDevicesRequest {
+  string user_id = 1;
+}
+
+message GetUserDevicesResponse {
+  repeated Device devices = 1;
+}
+
+message Device {
+  string id = 1;
+  string device_id = 2;
+  string device_name = 3;
+  string last_used_at = 4;
+  string created_at = 5;
+}
+
+message RevokeDeviceRequest {
+  string user_id = 1;
+  string device_id = 2;
+}
+
+// Password Management
+message PasswordResetRequest {
+  string email = 1;
+}
+
+message PasswordResetResponse {
+  bool success = 1;
+  string message = 2;
+  string reset_token = 3; // In real app, send this via email
+}
+
+message ResetPasswordRequest {
+  string reset_token = 1;
+  string new_password = 2;
+}
+
+message ChangePasswordRequest {
+  string user_id = 1;
+  string old_password = 2;
+  string new_password = 3;
+}
+
+// Generic Empty Response
+message EmptyResponse {
+  bool success = 1;
+  string message = 2;
+}
