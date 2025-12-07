@@ -17,7 +17,7 @@ export const servicesConfig: ServicesConfig = {
   },
   account: {
     host: process.env.ACCOUNT_SERVICE_HOST || "localhost",
-    port: parseInt(process.env.ACCOUNT_SERVICE_PORT || "3002", 10),
+    port: parseInt(process.env.ACCOUNT_SERVICE_PORT || "50052", 10),
   },
   transaction: {
     host: process.env.TRANSACTION_SERVICE_HOST || "localhost",
