@@ -1,9 +1,9 @@
 import { pool } from "./database";
 import { Account, CreateAccountDto } from "../models/account.model";
-import { v4 as uuidv4 } from "uuid";
 
 export class AccountRepository {
   async create(data: CreateAccountDto): Promise<Account> {
+    const { v4: uuidv4 } = await import("uuid");
     const id = uuidv4();
     const query = `
       INSERT INTO accounts (id, user_id, currency, balance, status)

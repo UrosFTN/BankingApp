@@ -25,6 +25,6 @@ export const servicesConfig: ServicesConfig = {
   },
   notification: {
     host: process.env.NOTIFICATION_SERVICE_HOST || "localhost",
-    port: parseInt(process.env.NOTIFICATION_SERVICE_PORT || "3004", 10),
+    port: parseInt(process.env.NOTIFICATION_SERVICE_PORT || "50054", 10),
   },
 };
