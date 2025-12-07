@@ -21,7 +21,7 @@ export const servicesConfig: ServicesConfig = {
   },
   transaction: {
     host: process.env.TRANSACTION_SERVICE_HOST || "localhost",
-    port: parseInt(process.env.TRANSACTION_SERVICE_PORT || "3003", 10),
+    port: parseInt(process.env.TRANSACTION_SERVICE_PORT || "50053", 10),
   },
   notification: {
     host: process.env.NOTIFICATION_SERVICE_HOST || "localhost",

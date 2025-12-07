@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package account;
+
+service AccountService {
+  rpc CreateAccount (CreateAccountRequest) returns (AccountResponse);
+  rpc GetAccount (GetAccountRequest) returns (AccountResponse);
+  rpc ListAccounts (ListAccountsRequest) returns (ListAccountsResponse);
+  rpc Deposit (DepositRequest) returns (AccountResponse);
+  rpc Withdraw (WithdrawRequest) returns (AccountResponse);
+  rpc Transfer (TransferRequest) returns (TransferResponse);
+}
+
+message CreateAccountRequest {
+  string user_id = 1;
+  string currency = 2;
+}
+
+message GetAccountRequest {
+  string account_id = 1;
+}
+
+message ListAccountsRequest {
+  string user_id = 1;
+}
+
+message DepositRequest {
+  string account_id = 1;
+  double amount = 2;
+}
+
+message WithdrawRequest {
+  string account_id = 1;
+  double amount = 2;
+}
+
+message TransferRequest {
+  string from_account_id = 1;
+  string to_account_id = 2;
+  double amount = 3;
+}
+
+message AccountResponse {
+  bool success = 1;
+  string message = 2;
+  Account account = 3;
+}
+
+message ListAccountsResponse {
+  repeated Account accounts = 1;
+}
+
+message TransferResponse {
+  bool success = 1;
+  string message = 2;
+  Account from_account = 3;
+  Account to_account = 4;
+}
+
+message Account {
+  string id = 1;
+  string user_id = 2;
+  string currency = 3;
+  double balance = 4;
+  string status = 5;
+  string created_at = 6;
+  string updated_at = 7;
+}
