@@ -1,7 +1,7 @@
 import Fastify, { FastifyError, FastifyReply } from "fastify";
 import dotenv from "dotenv";
 import { serverConfig } from "./config";
-import { timeStamp } from "console";
+import authRoutes from "./routes/auth.routes";
 
 dotenv.config();
 
@@ -38,9 +38,8 @@ fastify.get("/", async (request, reply) => {
   };
 });
 
-//TODO: Register routes here
-// import authRoutes from './routes/auth.routes';
-// fastify.register(authRoutes, { prefix: '/api/auth' });
+// Register routes
+fastify.register(authRoutes, { prefix: "/api/auth" });
 
 const start = async () => {
   try {

@@ -1,5 +1,6 @@
 import { ServerUnaryCall, sendUnaryData, status } from "@grpc/grpc-js";
 import { passwordService } from "../services/password.service";
+import { userService } from "../services/user.service";
 import logger from "../utils/logger";
 
 export class PasswordController {
@@ -51,7 +52,8 @@ export class PasswordController {
     try {
       const { user_id, old_password, new_password } = call.request;
 
-      // This would be in user service, but including here for completeness
+      await userService.changePassword(user_id, old_password, new_password);
+
       callback(null, {
         success: true,
         message: "Password changed successfully",

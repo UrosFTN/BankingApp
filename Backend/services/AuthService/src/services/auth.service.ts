@@ -184,6 +184,18 @@ export class AuthService {
     };
   }
 
+  async revokeRefreshToken(refreshToken: string): Promise<any> {
+    // Revoke refresh token without user context
+    await refreshTokenRepository.revokeToken(refreshToken);
+
+    logger.info({ refreshToken }, "Refresh token revoked");
+
+    return {
+      success: true,
+      message: "Refresh token revoked",
+    };
+  }
+
   private generateTokens(user: any): {
     accessToken: string;
     refreshToken: string;

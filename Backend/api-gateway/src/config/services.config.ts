@@ -13,7 +13,7 @@ export interface ServicesConfig {
 export const servicesConfig: ServicesConfig = {
   auth: {
     host: process.env.AUTH_SERVICE_HOST || "localhost",
-    port: parseInt(process.env.AUTH_SERVICE_PORT || "3001", 10),
+    port: parseInt(process.env.AUTH_SERVICE_PORT || "50051", 10),
   },
   account: {
     host: process.env.ACCOUNT_SERVICE_HOST || "localhost",

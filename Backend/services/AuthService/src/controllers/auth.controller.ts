@@ -97,6 +97,25 @@ export class AuthController {
       });
     }
   }
+
+  async revokeToken(
+    call: ServerUnaryCall<any, any>,
+    callback: sendUnaryData<any>,
+  ): Promise<void> {
+    try {
+      const { refresh_token } = call.request;
+
+      const result = await authService.revokeRefreshToken(refresh_token);
+
+      callback(null, result);
+    } catch (error: any) {
+      logger.error(error, "Error in revokeToken");
+      callback({
+        code: status.UNAUTHENTICATED,
+        message: error.message || "Token revocation failed",
+      });
+    }
+  }
 }
 
 export const authController = new AuthController();
