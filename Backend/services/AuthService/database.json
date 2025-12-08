@@ -1,6 +1,6 @@
 {
   "dev": {
-    "host": "localhost",
+    "host": "auth-db",
     "port": 5432,
     "database": "auth_db",
     "user": "postgres",
