@@ -4,7 +4,7 @@ export const databaseConfig = {
   database: process.env.DB_NAME || "auth_db",
   user: process.env.DB_USER || "postgres",
   password: process.env.DB_PASSWORD || "postgres",
-  max: 20, // Maximum pool size
+  max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
 };
