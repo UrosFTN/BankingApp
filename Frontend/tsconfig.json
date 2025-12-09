@@ -1,4 +1,8 @@
 {
-  "compilerOptions": {},
+  "compilerOptions": {
+    "paths": {
+      "@styles/*": ["./src/styles/*"]
+    }
+  },
   "extends": "expo/tsconfig.base"
 }
