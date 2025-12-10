@@ -7,12 +7,15 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
-import { colors } from "../../../styles/colors";
+import { colors } from "../../styles/colors";
+import { useRouter } from "expo-router";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+
+  const router = useRouter();
 
   async function handleForgotPassword() {
     return;
@@ -23,13 +26,13 @@ export default function LoginScreen() {
   }
 
   async function handleCreateAccount() {
-    return;
+    router.push("/register");
   }
 
   return (
     <View style={styles.container}>
       <Image
-        source={require("../../../../assets/logo.jpg")}
+        source={require("../../../assets/splash-icon.png")}
         style={styles.hero}
         resizeMode="contain"
       />
