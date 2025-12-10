@@ -22,7 +22,7 @@ export default function LoginScreen() {
   }
 
   async function handleLogin() {
-    return;
+    router.replace("/home");
   }
 
   async function handleCreateAccount() {

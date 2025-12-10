@@ -6,6 +6,11 @@ export interface RegisterRequest {
   password: string;
 }
 
+export interface LoginRequest {
+  email: string;
+  password;
+}
+
 export interface AuthResponse {
   success: boolean;
   message: string;
@@ -20,5 +25,14 @@ export const authApi = {
   register: async (data: RegisterRequest): Promise<AuthResponse> => {
     const response = await client.post("/api/auth/register", data);
     return response.data;
+  },
+
+  login: async (data: LoginRequest): Promise<AuthResponse> => {
+    const response = await client.post("api/auth/login", data);
+    return response.data;
+  },
+
+  logout: async (): Promise<void> => {
+    await client.post("/api/auth/logout");
   },
 };

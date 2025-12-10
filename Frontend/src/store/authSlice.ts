@@ -15,6 +15,8 @@ interface AuthState {
   isLoading: boolean;
   error: string | null;
   register: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
   clearError: () => void;
 }
 
@@ -42,11 +44,51 @@ export const useAuthStore = create<AuthState>((set) => ({
         isLoading: false,
       });
     } catch (error: any) {
-      console.log(error);
       const errorMessage =
         error.response?.data?.message || "Registration failed";
       set({ error: errorMessage, isLoading: false });
       throw new Error(errorMessage);
+    }
+  },
+
+  login: async (email: string, password: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await authApi.login({ email, password });
+      await AsyncStorage.setItem("accessToken", response.access_token);
+      await AsyncStorage.setItem("refreshToken", response.refresh_token);
+      set({
+        user: {
+          id: response.user_id,
+          email: response.email,
+          role: response.role,
+        },
+        accessToken: response.access_token,
+        refreshToken: response.refresh_token,
+        isLoading: false,
+      });
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || error.message || "Login failed";
+      set({ error: errorMessage, isLoading: false });
+      throw new Error(errorMessage);
+    }
+  },
+
+  logout: async () => {
+    set({ isLoading: true });
+    try {
+      await authApi.logout();
+      await AsyncStorage.removeItem("accessToken");
+      await AsyncStorage.removeItem("refreshToken");
+      set({
+        user: null,
+        accessToken: null,
+        refreshToken: null,
+        isLoading: false,
+      });
+    } catch (error: any) {
+      set({ isLoading: false });
     }
   },
 
