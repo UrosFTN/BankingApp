@@ -1,3 +1,5 @@
+name: BankingApp
+
 services:
   auth-db:
     image: postgres:16-alpine
