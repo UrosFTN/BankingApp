@@ -9,20 +9,34 @@ import {
 } from "react-native";
 import { colors } from "../../styles/colors";
 import { useRouter } from "expo-router";
+import { useAuthStore } from "../../store/authSlice";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [localError, setLocalError] = useState("");
 
   const router = useRouter();
+  const { login, isLoading, error } = useAuthStore();
 
   async function handleForgotPassword() {
     return;
   }
 
   async function handleLogin() {
-    router.replace("/home");
+    setLocalError("");
+    if (!email || !password) {
+      setLocalError("Email and password are required");
+      return;
+    }
+
+    try {
+      await login(email, password);
+      router.replace("/home");
+    } catch (err) {
+      setLocalError(error || "Login failed. Please try again.");
+    }
   }
 
   async function handleCreateAccount() {
@@ -57,8 +71,14 @@ export default function LoginScreen() {
         <Text style={styles.forgotPassword}>Forgot Password?</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+      <TouchableOpacity
+        style={[styles.button, isLoading && styles.buttonDisabled]}
+        onPress={handleLogin}
+        disabled={isLoading}
+      >
+        <Text style={styles.buttonText}>
+          {isLoading ? "Logging in..." : "Login"}
+        </Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.button} onPress={handleCreateAccount}>
@@ -118,5 +138,8 @@ const styles = StyleSheet.create({
     width: 180,
     height: 140,
     marginBottom: 16,
+  },
+  buttonDisabled: {
+    opacity: 0.6,
   },
 });

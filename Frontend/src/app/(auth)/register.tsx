@@ -41,7 +41,7 @@ export default function RegistrationScreen() {
 
     try {
       await register(email, password);
-      router.navigate("/login");
+      router.replace("/login");
     } catch (err) {
       setLocalError(error || "Registration failed");
     }
