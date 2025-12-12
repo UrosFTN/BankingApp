@@ -60,6 +60,7 @@ export default function RegistrationScreen() {
 
       <TextInput
         placeholder="Email"
+        placeholderTextColor={colors.gray}
         style={styles.input}
         value={email}
         onChangeText={setEmail}
@@ -67,6 +68,7 @@ export default function RegistrationScreen() {
       />
       <TextInput
         placeholder="Password"
+        placeholderTextColor={colors.gray}
         secureTextEntry
         style={styles.input}
         value={password}
@@ -75,6 +77,7 @@ export default function RegistrationScreen() {
       />
       <TextInput
         placeholder="Confirm Password"
+        placeholderTextColor={colors.gray}
         secureTextEntry
         style={styles.input}
         value={confirm}
@@ -90,8 +93,11 @@ export default function RegistrationScreen() {
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.back()}>
-        <Text style={styles.button}>Back to Login</Text>
+      <TouchableOpacity
+        style={styles.cancelButton}
+        onPress={() => router.back()}
+      >
+        <Text style={styles.cancelButtonText}>Back to Login</Text>
       </TouchableOpacity>
     </View>
   );
@@ -108,7 +114,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-    color: colors.whiteText,
+    color: colors.white,
   },
   input: {
     width: "80%",
@@ -116,7 +122,8 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     borderRadius: 5,
-    color: colors.whiteText,
+    color: colors.white,
+    borderColor: colors.gray,
     backgroundColor: colors.foreground,
   },
   button: {
@@ -127,6 +134,7 @@ const styles = StyleSheet.create({
     width: "80%",
     alignItems: "center",
     marginTop: 10,
+    marginBottom: 10,
   },
   buttonText: {
     color: colors.black,
@@ -142,5 +150,18 @@ const styles = StyleSheet.create({
     color: "#ff6b6b",
     marginBottom: 12,
     textAlign: "center",
+  },
+  cancelButton: {
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 5,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: colors.lime,
+  },
+  cancelButtonText: {
+    color: colors.lime,
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

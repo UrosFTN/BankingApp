@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { colors } from "../../styles/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuthStore } from "../../store/authSlice";
+
 export default function AppLayout() {
+  const [localError, setLocalError] = useState("");
+
   const router = useRouter();
+  const { logout, error } = useAuthStore();
+
+  async function handleLogout() {
+    try {
+      await logout();
+      router.push("/(auth)/login");
+    } catch (err) {
+      setLocalError(error);
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -15,7 +29,7 @@ export default function AppLayout() {
           <TouchableOpacity onPress={() => {}}>
             <Text style={styles.headerButton}>Settings</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push("/(auth)/login")}>
+          <TouchableOpacity onPress={handleLogout}>
             <Text style={styles.headerButton}>Logout</Text>
           </TouchableOpacity>
         </View>
@@ -26,6 +40,7 @@ export default function AppLayout() {
         <Stack
           screenOptions={{
             headerShown: false,
+            animation: "none",
           }}
         />
       </View>
@@ -34,15 +49,15 @@ export default function AppLayout() {
       <View style={styles.footer}>
         <TouchableOpacity
           style={styles.tabItem}
-          onPress={() => router.push("/(app)/home")}
-        >
-          <Text style={styles.tabText}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.tabItem}
           onPress={() => router.push("/(app)/accounts")}
         >
           <Text style={styles.tabText}>Accounts</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.tabItem}
+          onPress={() => router.push("/(app)/payments")}
+        >
+          <Text style={styles.tabText}>Payment</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.tabItem}
@@ -77,14 +92,14 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: colors.limeText,
+    color: colors.lime,
   },
   headerButtons: {
     flexDirection: "row",
     gap: 12,
   },
   headerButton: {
-    color: colors.limeText,
+    color: colors.lime,
     fontSize: 14,
     paddingHorizontal: 8,
   },
@@ -106,8 +121,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   tabText: {
-    color: colors.limeText,
-    fontSize: 12,
+    color: colors.lime,
+    fontSize: 14,
     fontWeight: "600",
   },
 });

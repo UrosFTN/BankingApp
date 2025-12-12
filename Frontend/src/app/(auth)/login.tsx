@@ -33,9 +33,9 @@ export default function LoginScreen() {
 
     try {
       await login(email, password);
-      router.replace("/home");
+      router.replace("/accounts");
     } catch (err) {
-      setLocalError(error || "Login failed. Please try again.");
+      setLocalError("Login failed. Please try again.");
     }
   }
 
@@ -54,6 +54,7 @@ export default function LoginScreen() {
 
       <TextInput
         placeholder="Email"
+        placeholderTextColor={colors.gray}
         style={styles.input}
         value={email}
         onChangeText={setEmail}
@@ -61,6 +62,7 @@ export default function LoginScreen() {
 
       <TextInput
         placeholder="Password"
+        placeholderTextColor={colors.gray}
         secureTextEntry
         style={styles.input}
         value={password}
@@ -85,7 +87,7 @@ export default function LoginScreen() {
         <Text style={styles.buttonText}>Create Account</Text>
       </TouchableOpacity>
 
-      {message ? <Text style={styles.message}>{message}</Text> : null}
+      {localError ? <Text style={styles.message}>{localError}</Text> : null}
     </View>
   );
 }
@@ -101,20 +103,21 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: "bold",
     marginBottom: 20,
-    color: colors.whiteText,
-    outlineColor: colors.limeText,
+    color: colors.white,
+    outlineColor: colors.lime,
   },
   input: {
     borderWidth: 1,
     padding: 10,
     marginBottom: 10,
     borderRadius: 5,
-    color: colors.whiteText,
+    color: colors.white,
+    borderColor: colors.gray,
 
     backgroundColor: colors.foreground,
     width: "80%",
   },
-  message: { marginTop: 10, fontSize: 16 },
+  message: { marginTop: 10, fontSize: 16, color: colors.white },
   button: {
     backgroundColor: colors.primaryButton,
     paddingVertical: 12,
@@ -130,7 +133,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   forgotPassword: {
-    color: colors.limeText,
+    color: colors.lime,
     textDecorationLine: "underline",
     marginBottom: 12,
   },

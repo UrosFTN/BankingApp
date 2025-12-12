@@ -1,15 +1,16 @@
+import { StyleSheet, Text, View } from "react-native";
+import { colors } from "@styles/colors";
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { colors } from "../../styles/colors";
 
-export default function HomeScreen() {
+const ProfileScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Home</Text>
-      {/* Your home content here */}
+      <Text style={styles.title}>Profile Screen</Text>
     </View>
   );
-}
+};
+
+export default ProfileScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -20,6 +21,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: colors.whiteText,
+    color: colors.white,
   },
 });
