@@ -35,23 +35,19 @@ type Account struct {
 	UpdatedAt         time.Time      `json:"updated_at"`
 }
 
-// Value implements the driver.Valuer interface for AccountStatus
 func (s AccountStatus) Value() (driver.Value, error) {
     return string(s), nil
 }
 
-// Scan implements the sql.Scanner interface for AccountStatus
 func (s *AccountStatus) Scan(value interface{}) error {
     *s = AccountStatus(value.(string))
     return nil
 }
 
-// Value implements the driver.Valuer interface for AccountType
 func (t AccountType) Value() (driver.Value, error) {
     return string(t), nil
 }
 
-// Scan implements the sql.Scanner interface for AccountType
 func (t *AccountType) Scan(value interface{}) error {
     *t = AccountType(value.(string))
     return nil
