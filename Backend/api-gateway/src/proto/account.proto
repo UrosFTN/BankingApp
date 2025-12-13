@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package account;
+
+service AccountService {
+  rpc CreateAccount (CreateAccountRequest) returns (CreateAccountResponse);
+  rpc GetAccount (GetAccountRequest) returns (GetAccountResponse);
+  rpc GetAccountsByUser (GetAccountsByUserRequest) returns (GetAccountsByUserResponse);
+  rpc UpdateAccount (UpdateAccountRequest) returns (UpdateAccountResponse);
+  rpc DeleteAccount (DeleteAccountRequest) returns (DeleteAccountResponse);
+  rpc GetBalance (GetBalanceRequest) returns (GetBalanceResponse);
+  rpc UpdateBalance (UpdateBalanceRequest) returns (UpdateBalanceResponse);
+}
+
+enum AccountType {
+  CHECKING = 0;
+  SAVINGS = 1;
+  CREDIT = 2;
+}
+
+enum AccountStatus {
+  ACTIVE = 0;
+  CLOSED = 1;
+  FROZEN = 2;
+}
+
+message Account {
+  uint32 id = 1;
+  uint32 user_id = 2;
+  string account_number = 3;
+  string iban = 4;
+  string account_holder_name = 5;
+  AccountType account_type = 6;
+  double balance = 7;
+  string currency = 8;
+  AccountStatus status = 9;
+  string created_at = 10;
+  string updated_at = 11;
+}
+
+message CreateAccountRequest {
+  uint32 user_id = 1;
+  string account_holder_name = 2;
+  AccountType account_type = 3;
+  string currency = 4;
+}
+
+message CreateAccountResponse {
+  bool success = 1;
+  string message = 2;
+  Account account = 3;
+}
+
+message GetAccountRequest {
+  uint32 account_id = 1;
+  uint32 user_id = 2;
+}
+
+message GetAccountResponse {
+  bool success = 1;
+  string message = 2;
+  Account account = 3;
+}
+
+message GetAccountsByUserRequest {
+  uint32 user_id = 1;
+}
+
+message GetAccountsByUserResponse {
+  bool success = 1;
+  string message = 2;
+  repeated Account accounts = 3;
+}
+
+message UpdateAccountRequest {
+  uint32 account_id = 1;
+  uint32 user_id = 2;
+  optional string account_holder_name = 3;
+  optional AccountStatus status = 4;
+}
+
+message UpdateAccountResponse {
+  bool success = 1;
+  string message = 2;
+  Account account = 3;
+}
+
+message DeleteAccountRequest {
+  uint32 account_id = 1;
+  uint32 user_id = 2;
+}
+
+message DeleteAccountResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetBalanceRequest {
+  uint32 account_id = 1;
+  uint32 user_id = 2;
+}
+
+message GetBalanceResponse {
+  bool success = 1;
+  string message = 2;
+  double balance = 3;
+  string currency = 4;
+}
+
+message UpdateBalanceRequest {
+  uint32 account_id = 1;
+  double amount = 2;
+  string transaction_id = 3;
+}
+
+message UpdateBalanceResponse {
+  bool success = 1;
+  string message = 2;
+  double new_balance = 3;
+}

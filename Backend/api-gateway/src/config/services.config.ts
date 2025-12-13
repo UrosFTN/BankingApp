@@ -16,15 +16,15 @@ export const servicesConfig: ServicesConfig = {
     port: parseInt(process.env.AUTH_SERVICE_PORT || "50051", 10),
   },
   account: {
-    host: process.env.ACCOUNT_SERVICE_HOST || "localhost",
+    host: process.env.ACCOUNT_SERVICE_HOST || "account-service",
     port: parseInt(process.env.ACCOUNT_SERVICE_PORT || "50052", 10),
   },
   transaction: {
-    host: process.env.TRANSACTION_SERVICE_HOST || "localhost",
+    host: process.env.TRANSACTION_SERVICE_HOST || "transaction-service",
     port: parseInt(process.env.TRANSACTION_SERVICE_PORT || "50053", 10),
   },
   notification: {
-    host: process.env.NOTIFICATION_SERVICE_HOST || "localhost",
+    host: process.env.NOTIFICATION_SERVICE_HOST || "notification-service",
     port: parseInt(process.env.NOTIFICATION_SERVICE_PORT || "50054", 10),
   },
 };
