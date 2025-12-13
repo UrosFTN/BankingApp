@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     paddingVertical: 12,
-    borderTopColor: colors.black,
+    borderTopColor: colors.gray,
     borderTopWidth: 1,
   },
   tabItem: {

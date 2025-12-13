@@ -10,5 +10,5 @@ export const colors = {
   black: "#000000",
   gray: "#2e2e2eff",
 
-  card: "#08203fff",
+  card: "#05131fff",
 };

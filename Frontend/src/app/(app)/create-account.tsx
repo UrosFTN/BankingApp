@@ -11,6 +11,8 @@ import {
 import { colors } from "@styles/colors";
 import { useRouter } from "expo-router";
 import { Picker } from "@react-native-picker/picker";
+import { useAccountStore } from "../../store/accountStore";
+import { AccountType } from "../../services/api/account.api";
 
 const CreateAccountScreen = () => {
   const router = useRouter();
@@ -18,6 +20,8 @@ const CreateAccountScreen = () => {
   const [accountType, setAccountType] = useState("checking");
   const [currency, setCurrency] = useState("USD");
   const [isLoading, setIsLoading] = useState(false);
+
+  const { createAccount } = useAccountStore();
 
   const accountTypes = [
     { label: "Checking", value: "checking" },
@@ -42,12 +46,11 @@ const CreateAccountScreen = () => {
     setIsLoading(true);
 
     try {
-      // TODO: Call API to create account
-      // const response = await accountAPI.createAccount({
-      //   accountHolderName,
-      //   accountType,
-      //   currency,
-      // });
+      await createAccount({
+        account_holder_name: accountHolderName,
+        account_type: accountType as AccountType,
+        currency,
+      });
 
       Alert.alert("Success", "Account created successfully!", [
         {
