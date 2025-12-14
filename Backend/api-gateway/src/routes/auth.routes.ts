@@ -2,96 +2,111 @@ import { FastifyInstance, FastifyPluginAsync } from "fastify";
 import { authClient } from "../clients/auth.client";
 
 const authRoutes: FastifyPluginAsync = async (fastify: FastifyInstance) => {
-  fastify.post("/register", async (request, reply) => {
+  // Extract bearer token and attach validated user id when present
+  fastify.addHook("preHandler", async (request) => {
+    const authHeader = request.headers.authorization;
+    if (!authHeader) return;
+    const token = authHeader.replace("Bearer ", "").trim();
+    try {
+      const validation = await authClient.validateToken({
+        access_token: token,
+      });
+      if (validation?.valid) {
+        const userId =
+          typeof validation.user_id === "string"
+            ? parseInt(validation.user_id, 10)
+            : validation.user_id;
+        (request as any).user = { id: userId };
+        (request as any).accessToken = token;
+      }
+    } catch (_) {
+      // ignore; some routes don't require auth
+    }
+  });
+
+  fastify.post("/register", async (request) => {
     const { email, password } = request.body as any;
-    const response = await authClient.register({ email, password });
-    return response;
+    return authClient.register({ email, password });
   });
 
-  fastify.post("/login", async (request, reply) => {
+  fastify.post("/login", async (request) => {
     const { email, password } = request.body as any;
-    const response = await authClient.login({ email, password });
-    return response;
+    return authClient.login({ email, password });
   });
 
-  fastify.post("/refresh", async (request, reply) => {
+  fastify.post("/refresh", async (request) => {
     const { refresh_token } = request.body as any;
-    const response = await authClient.refreshToken({ refresh_token });
-    return response;
+    return authClient.refreshToken({ refresh_token });
   });
 
-  fastify.post("/validate", async (request, reply) => {
-    const { access_token } = request.body as any;
-    const response = await authClient.validateToken({ access_token });
-    return response;
+  // Validate using bearer token only
+  fastify.post("/validate", async (request) => {
+    const token = (request as any).accessToken;
+    if (!token) return { valid: false };
+    return authClient.validateToken({ access_token: token });
   });
 
-  fastify.post("/logout", async (request, reply) => {
-    const { user_id, refresh_token } = request.body as any;
-    const response = await authClient.logout({ user_id, refresh_token });
-    return response;
+  // Logout uses RevokeToken (only needs refresh_token)
+  fastify.post("/logout", async (request) => {
+    const { refresh_token } = (request.body as any) || {};
+    return authClient.revokeToken({ refresh_token });
   });
 
-  fastify.post("/revoke", async (request, reply) => {
+  fastify.post("/revoke", async (request) => {
     const { refresh_token } = request.body as any;
-    const response = await authClient.revokeToken({ refresh_token });
-    return response;
+    return authClient.revokeToken({ refresh_token });
   });
 
-  fastify.post("/device/register", async (request, reply) => {
-    const { user_id, device_id, device_name } = request.body as any;
-    const response = await authClient.registerDevice({
-      user_id,
+  // Device register uses bearer-derived user_id
+  fastify.post("/device/register", async (request) => {
+    const userId = (request as any).user?.id;
+    const { device_id, device_name } = request.body as any;
+    return authClient.registerDevice({
+      user_id: String(userId),
       device_id,
       device_name,
     });
-    return response;
   });
 
-  fastify.post("/device/login", async (request, reply) => {
+  fastify.post("/device/login", async (request) => {
     const { device_token } = request.body as any;
-    const response = await authClient.loginWithDevice({ device_token });
-    return response;
+    return authClient.loginWithDevice({ device_token });
   });
 
-  fastify.get("/devices/:userId", async (request, reply) => {
-    const { userId } = request.params as any;
-    const response = await authClient.getUserDevices({ user_id: userId });
-    return response;
+  // List devices for bearer-derived user_id (ignore path param)
+  fastify.get("/devices/:userId", async (request) => {
+    const userId = (request as any).user?.id;
+    return authClient.getUserDevices({ user_id: String(userId) });
   });
 
-  fastify.delete("/devices/:userId/:deviceId", async (request, reply) => {
-    const { userId, deviceId } = request.params as any;
-    const response = await authClient.revokeDevice({
-      user_id: userId,
+  fastify.delete("/devices/:userId/:deviceId", async (request) => {
+    const userId = (request as any).user?.id;
+    const { deviceId } = request.params as any;
+    return authClient.revokeDevice({
+      user_id: String(userId),
       device_id: deviceId,
     });
-    return response;
   });
 
-  fastify.post("/password/reset-request", async (request, reply) => {
+  fastify.post("/password/reset-request", async (request) => {
     const { email } = request.body as any;
-    const response = await authClient.requestPasswordReset({ email });
-    return response;
+    return authClient.requestPasswordReset({ email });
   });
 
-  fastify.post("/password/reset", async (request, reply) => {
+  fastify.post("/password/reset", async (request) => {
     const { reset_token, new_password } = request.body as any;
-    const response = await authClient.resetPassword({
-      reset_token,
-      new_password,
-    });
-    return response;
+    return authClient.resetPassword({ reset_token, new_password });
   });
 
-  fastify.post("/password/change", async (request, reply) => {
-    const { user_id, old_password, new_password } = request.body as any;
-    const response = await authClient.changePassword({
-      user_id,
+  // Change password uses bearer-derived user_id
+  fastify.post("/password/change", async (request) => {
+    const userId = (request as any).user?.id;
+    const { old_password, new_password } = request.body as any;
+    return authClient.changePassword({
+      user_id: String(userId),
       old_password,
       new_password,
     });
-    return response;
   });
 };
 
