@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { colors } from "../../styles/colors";
 import { useRouter } from "expo-router";
-import { useAuthStore } from "../../store/authSlice";
+import { useAuthStore } from "../../store/authStore";
 
 export default function RegistrationScreen() {
   const [email, setEmail] = useState("");

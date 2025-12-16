@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { colors } from "../../styles/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useAuthStore } from "../../store/authSlice";
+import { useAuthStore } from "../../store/authStore";
 
 export default function AppLayout() {
   const [localError, setLocalError] = useState("");

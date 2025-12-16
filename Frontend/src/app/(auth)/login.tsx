@@ -9,12 +9,11 @@ import {
 } from "react-native";
 import { colors } from "../../styles/colors";
 import { useRouter } from "expo-router";
-import { useAuthStore } from "../../store/authSlice";
+import { useAuthStore } from "../../store/authStore";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
   const [localError, setLocalError] = useState("");
 
   const router = useRouter();
@@ -32,7 +31,7 @@ export default function LoginScreen() {
     }
 
     try {
-      await login(email, password);
+      const res = await login(email, password);
       router.replace("/accounts");
     } catch (err) {
       setLocalError("Login failed. Please try again.");

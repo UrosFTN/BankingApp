@@ -1,3 +1,4 @@
+// Frontend: src/services/api/account.api.ts
 import client from "./client";
 
 export type AccountType = "checking" | "savings" | "credit";
@@ -33,7 +34,9 @@ export const accountApi = {
 
   getAccounts: async (): Promise<Account[]> => {
     const res = await client.get(basePath);
-    return res.data.accounts ?? res.data;
+    const accounts = res.data.accounts ?? res.data;
+
+    return accounts;
   },
 
   getAccount: async (accountId: string): Promise<Account> => {

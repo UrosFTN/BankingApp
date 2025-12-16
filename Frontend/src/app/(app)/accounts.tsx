@@ -32,8 +32,8 @@ export default function AccountsScreen() {
     router.push("/(app)/create-account");
   };
 
-  const handleAccountPress = (acc: Account) => {
-    setSelectedAccount(acc);
+  const handleAccountPress = (account: Account) => {
+    setSelectedAccount(account);
     router.navigate("/(app)/account-details");
   };
   const cap = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
@@ -64,19 +64,21 @@ export default function AccountsScreen() {
           />
         }
       >
-        {accounts.map((acc) => (
+        {accounts.map((account) => (
           <TouchableOpacity
-            key={acc.id}
+            key={account.id}
             style={styles.card}
-            onPress={() => handleAccountPress(acc)}
+            onPress={() => handleAccountPress(account)}
           >
             <View style={styles.row}>
-              <Text style={styles.accountType}>{cap(acc.account_type)}</Text>
-              <Text style={styles.status}>{cap(acc.status)}</Text>
+              <Text style={styles.accountType}>
+                {cap(account.account_type)}
+              </Text>
+              <Text style={styles.status}>{cap(account.status)}</Text>
             </View>
-            <Text style={styles.number}>{acc.account_number}</Text>
+            <Text style={styles.number}>{account.account_number}</Text>
             <Text style={styles.balance}>
-              {acc.balance.toFixed(2)} {acc.currency}
+              {account.balance.toFixed(2)} {account.currency}
             </Text>
           </TouchableOpacity>
         ))}
