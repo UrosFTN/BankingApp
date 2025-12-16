@@ -2,9 +2,9 @@
 
 
 export interface GetAccountsByUserRequest {
-  'userId'?: (number);
+  'userId'?: (string);
 }
 
 export interface GetAccountsByUserRequest__Output {
-  'userId': (number);
+  'userId': (string);
 }

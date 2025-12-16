@@ -3,6 +3,8 @@ package models
 import (
 	"database/sql/driver"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type AccountStatus string
@@ -22,8 +24,8 @@ const (
 )
 
 type Account struct {
-	ID                uint           `gorm:"primaryKey" json:"id"`
-	UserID            uint           `gorm:"index;not null" json:"user_id"`
+	ID                uuid.UUID     `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id"`
+	UserID            uuid.UUID     `gorm:"type:uuid;index;not null" json:"user_id"`
 	AccountNumber     string         `gorm:"uniqueIndex;not null" json:"account_number"`
 	IBAN              string         `gorm:"uniqueIndex;not null" json:"iban"`
 	AccountHolderName string         `gorm:"not null" json:"account_holder_name"`

@@ -2,11 +2,11 @@
 
 
 export interface GetAccountRequest {
-  'accountId'?: (number);
-  'userId'?: (number);
+  'accountId'?: (string);
+  'userId'?: (string);
 }
 
 export interface GetAccountRequest__Output {
-  'accountId': (number);
-  'userId': (number);
+  'accountId': (string);
+  'userId': (string);
 }

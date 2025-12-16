@@ -2,11 +2,11 @@
 
 
 export interface DeleteAccountRequest {
-  'accountId'?: (number);
-  'userId'?: (number);
+  'accountId'?: (string);
+  'userId'?: (string);
 }
 
 export interface DeleteAccountRequest__Output {
-  'accountId': (number);
-  'userId': (number);
+  'accountId': (string);
+  'userId': (string);
 }

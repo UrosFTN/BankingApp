@@ -2,11 +2,11 @@
 
 
 export interface GetBalanceRequest {
-  'accountId'?: (number);
-  'userId'?: (number);
+  'accountId'?: (string);
+  'userId'?: (string);
 }
 
 export interface GetBalanceRequest__Output {
-  'accountId': (number);
-  'userId': (number);
+  'accountId': (string);
+  'userId': (string);
 }

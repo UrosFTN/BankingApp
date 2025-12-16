@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -25,16 +26,24 @@ func NewAccountService(db *gorm.DB) *AccountService {
 }
 
 func (s *AccountService) CreateAccount(ctx context.Context, req *proto.CreateAccountRequest) (*proto.CreateAccountResponse, error) {
+    userID, err := uuid.Parse(req.UserId)
+    if err != nil {
+        return &proto.CreateAccountResponse{
+            Success: false,
+            Message: "Invalid user ID format",
+        }, status.Error(codes.InvalidArgument, "Invalid user ID format")
+    }
+
     logrus.WithFields(logrus.Fields{
         "user_id":      req.UserId,
         "account_type": req.AccountType,
     }).Info("Creating new account")
 
-    accountNumber := fmt.Sprintf("ACC%d%d", req.UserId, time.Now().Unix())
-    iban := fmt.Sprintf("US%d%d", req.UserId, time.Now().Unix())
+    accountNumber := fmt.Sprintf("ACC%s%d", userID.String()[:8], time.Now().Unix())
+    iban := fmt.Sprintf("US%s%d", userID.String()[:8], time.Now().Unix())
 
     account := &models.Account{
-        UserID:            uint(req.UserId),
+        UserID:            userID,
         AccountNumber:     accountNumber,
         IBAN:              iban,
         AccountHolderName: req.AccountHolderName,
@@ -60,9 +69,25 @@ func (s *AccountService) CreateAccount(ctx context.Context, req *proto.CreateAcc
 }
 
 func (s *AccountService) GetAccount(ctx context.Context, req *proto.GetAccountRequest) (*proto.GetAccountResponse, error) {
+    accountID, err := uuid.Parse(req.AccountId)
+    if err != nil {
+        return &proto.GetAccountResponse{
+            Success: false,
+            Message: "Invalid account ID format",
+        }, status.Error(codes.InvalidArgument, "Invalid account ID format")
+    }
+
+    userID, err := uuid.Parse(req.UserId)
+    if err != nil {
+        return &proto.GetAccountResponse{
+            Success: false,
+            Message: "Invalid user ID format",
+        }, status.Error(codes.InvalidArgument, "Invalid user ID format")
+    }
+
     var account models.Account
 
-    if err := s.db.Where("id = ? AND user_id = ?", req.AccountId, req.UserId).First(&account).Error; err != nil {
+    if err := s.db.Where("id = ? AND user_id = ?", accountID, userID).First(&account).Error; err != nil {
         if errors.Is(err, gorm.ErrRecordNotFound) {
             return &proto.GetAccountResponse{
                 Success: false,
@@ -83,9 +108,17 @@ func (s *AccountService) GetAccount(ctx context.Context, req *proto.GetAccountRe
 }
 
 func (s *AccountService) GetAccountsByUser(ctx context.Context, req *proto.GetAccountsByUserRequest) (*proto.GetAccountsByUserResponse, error) {
+    userID, err := uuid.Parse(req.UserId)
+    if err != nil {
+        return &proto.GetAccountsByUserResponse{
+            Success: false,
+            Message: "Invalid user ID format",
+        }, status.Error(codes.InvalidArgument, "Invalid user ID format")
+    }
+
     var accounts []models.Account
 
-    if err := s.db.Where("user_id = ?", req.UserId).Find(&accounts).Error; err != nil {
+    if err := s.db.Where("user_id = ?", userID).Find(&accounts).Error; err != nil {
         return &proto.GetAccountsByUserResponse{
             Success: false,
             Message: "Failed to get accounts",
@@ -105,9 +138,25 @@ func (s *AccountService) GetAccountsByUser(ctx context.Context, req *proto.GetAc
 }
 
 func (s *AccountService) UpdateAccount(ctx context.Context, req *proto.UpdateAccountRequest) (*proto.UpdateAccountResponse, error) {
+    accountID, err := uuid.Parse(req.AccountId)
+    if err != nil {
+        return &proto.UpdateAccountResponse{
+            Success: false,
+            Message: "Invalid account ID format",
+        }, status.Error(codes.InvalidArgument, "Invalid account ID format")
+    }
+
+    userID, err := uuid.Parse(req.UserId)
+    if err != nil {
+        return &proto.UpdateAccountResponse{
+            Success: false,
+            Message: "Invalid user ID format",
+        }, status.Error(codes.InvalidArgument, "Invalid user ID format")
+    }
+
     var account models.Account
 
-    if err := s.db.Where("id = ? AND user_id = ?", req.AccountId, req.UserId).First(&account).Error; err != nil {
+    if err := s.db.Where("id = ? AND user_id = ?", accountID, userID).First(&account).Error; err != nil {
         if errors.Is(err, gorm.ErrRecordNotFound) {
             return &proto.UpdateAccountResponse{
                 Success: false,
@@ -142,7 +191,23 @@ func (s *AccountService) UpdateAccount(ctx context.Context, req *proto.UpdateAcc
 }
 
 func (s *AccountService) DeleteAccount(ctx context.Context, req *proto.DeleteAccountRequest) (*proto.DeleteAccountResponse, error) {
-    result := s.db.Where("id = ? AND user_id = ?", req.AccountId, req.UserId).Delete(&models.Account{})
+    accountID, err := uuid.Parse(req.AccountId)
+    if err != nil {
+        return &proto.DeleteAccountResponse{
+            Success: false,
+            Message: "Invalid account ID format",
+        }, status.Error(codes.InvalidArgument, "Invalid account ID format")
+    }
+
+    userID, err := uuid.Parse(req.UserId)
+    if err != nil {
+        return &proto.DeleteAccountResponse{
+            Success: false,
+            Message: "Invalid user ID format",
+        }, status.Error(codes.InvalidArgument, "Invalid user ID format")
+    }
+
+    result := s.db.Where("id = ? AND user_id = ?", accountID, userID).Delete(&models.Account{})
 
     if result.Error != nil {
         return &proto.DeleteAccountResponse{
@@ -165,9 +230,25 @@ func (s *AccountService) DeleteAccount(ctx context.Context, req *proto.DeleteAcc
 }
 
 func (s *AccountService) GetBalance(ctx context.Context, req *proto.GetBalanceRequest) (*proto.GetBalanceResponse, error) {
+    accountID, err := uuid.Parse(req.AccountId)
+    if err != nil {
+        return &proto.GetBalanceResponse{
+            Success: false,
+            Message: "Invalid account ID format",
+        }, status.Error(codes.InvalidArgument, "Invalid account ID format")
+    }
+
+    userID, err := uuid.Parse(req.UserId)
+    if err != nil {
+        return &proto.GetBalanceResponse{
+            Success: false,
+            Message: "Invalid user ID format",
+        }, status.Error(codes.InvalidArgument, "Invalid user ID format")
+    }
+
     var account models.Account
 
-    if err := s.db.Where("id = ? AND user_id = ?", req.AccountId, req.UserId).First(&account).Error; err != nil {
+    if err := s.db.Where("id = ? AND user_id = ?", accountID, userID).First(&account).Error; err != nil {
         if errors.Is(err, gorm.ErrRecordNotFound) {
             return &proto.GetBalanceResponse{
                 Success: false,
@@ -202,9 +283,17 @@ func (s *AccountService) UpdateBalance(ctx context.Context, req *proto.UpdateBal
         }
     }()
 
+    accountID, err := uuid.Parse(req.AccountId)
+    if err != nil {
+        return &proto.UpdateBalanceResponse{
+            Success: false,
+            Message: "Invalid account ID format",
+        }, status.Error(codes.InvalidArgument, "Invalid account ID format")
+    }
+
     var account models.Account
 
-    if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("id = ?", req.AccountId).First(&account).Error; err != nil {
+    if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).Where("id = ?", accountID).First(&account).Error; err != nil {
         tx.Rollback()
         if errors.Is(err, gorm.ErrRecordNotFound) {
             return &proto.UpdateBalanceResponse{
@@ -263,8 +352,8 @@ func (s *AccountService) UpdateBalance(ctx context.Context, req *proto.UpdateBal
 
 func (s *AccountService) accountToProto(account *models.Account) *proto.Account {
     return &proto.Account{
-        Id:                uint32(account.ID),
-        UserId:            uint32(account.UserID),
+        Id:                account.ID.String(),
+        UserId:            account.UserID.String(),
         AccountNumber:     account.AccountNumber,
         Iban:              account.IBAN,
         AccountHolderName: account.AccountHolderName,

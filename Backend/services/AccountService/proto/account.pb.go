@@ -121,8 +121,8 @@ func (AccountStatus) EnumDescriptor() ([]byte, []int) {
 
 type Account struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	Id                uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	UserId            uint32                 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Id                string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	UserId            string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	AccountNumber     string                 `protobuf:"bytes,3,opt,name=account_number,json=accountNumber,proto3" json:"account_number,omitempty"`
 	Iban              string                 `protobuf:"bytes,4,opt,name=iban,proto3" json:"iban,omitempty"`
 	AccountHolderName string                 `protobuf:"bytes,5,opt,name=account_holder_name,json=accountHolderName,proto3" json:"account_holder_name,omitempty"`
@@ -166,18 +166,18 @@ func (*Account) Descriptor() ([]byte, []int) {
 	return file_proto_account_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Account) GetId() uint32 {
+func (x *Account) GetId() string {
 	if x != nil {
 		return x.Id
 	}
-	return 0
+	return ""
 }
 
-func (x *Account) GetUserId() uint32 {
+func (x *Account) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 func (x *Account) GetAccountNumber() string {
@@ -245,7 +245,7 @@ func (x *Account) GetUpdatedAt() string {
 
 type CreateAccountRequest struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	UserId            uint32                 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserId            string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	AccountHolderName string                 `protobuf:"bytes,2,opt,name=account_holder_name,json=accountHolderName,proto3" json:"account_holder_name,omitempty"`
 	AccountType       AccountType            `protobuf:"varint,3,opt,name=account_type,json=accountType,proto3,enum=account.AccountType" json:"account_type,omitempty"`
 	Currency          string                 `protobuf:"bytes,4,opt,name=currency,proto3" json:"currency,omitempty"`
@@ -283,11 +283,11 @@ func (*CreateAccountRequest) Descriptor() ([]byte, []int) {
 	return file_proto_account_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CreateAccountRequest) GetUserId() uint32 {
+func (x *CreateAccountRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 func (x *CreateAccountRequest) GetAccountHolderName() string {
@@ -373,8 +373,8 @@ func (x *CreateAccountResponse) GetAccount() *Account {
 
 type GetAccountRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccountId     uint32                 `protobuf:"varint,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
-	UserId        uint32                 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	AccountId     string                 `protobuf:"bytes,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -409,18 +409,18 @@ func (*GetAccountRequest) Descriptor() ([]byte, []int) {
 	return file_proto_account_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *GetAccountRequest) GetAccountId() uint32 {
+func (x *GetAccountRequest) GetAccountId() string {
 	if x != nil {
 		return x.AccountId
 	}
-	return 0
+	return ""
 }
 
-func (x *GetAccountRequest) GetUserId() uint32 {
+func (x *GetAccountRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 type GetAccountResponse struct {
@@ -485,7 +485,7 @@ func (x *GetAccountResponse) GetAccount() *Account {
 
 type GetAccountsByUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        uint32                 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -520,11 +520,11 @@ func (*GetAccountsByUserRequest) Descriptor() ([]byte, []int) {
 	return file_proto_account_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetAccountsByUserRequest) GetUserId() uint32 {
+func (x *GetAccountsByUserRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 type GetAccountsByUserResponse struct {
@@ -589,8 +589,8 @@ func (x *GetAccountsByUserResponse) GetAccounts() []*Account {
 
 type UpdateAccountRequest struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	AccountId         uint32                 `protobuf:"varint,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
-	UserId            uint32                 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	AccountId         string                 `protobuf:"bytes,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	UserId            string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	AccountHolderName *string                `protobuf:"bytes,3,opt,name=account_holder_name,json=accountHolderName,proto3,oneof" json:"account_holder_name,omitempty"`
 	Status            *AccountStatus         `protobuf:"varint,4,opt,name=status,proto3,enum=account.AccountStatus,oneof" json:"status,omitempty"`
 	unknownFields     protoimpl.UnknownFields
@@ -627,18 +627,18 @@ func (*UpdateAccountRequest) Descriptor() ([]byte, []int) {
 	return file_proto_account_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *UpdateAccountRequest) GetAccountId() uint32 {
+func (x *UpdateAccountRequest) GetAccountId() string {
 	if x != nil {
 		return x.AccountId
 	}
-	return 0
+	return ""
 }
 
-func (x *UpdateAccountRequest) GetUserId() uint32 {
+func (x *UpdateAccountRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 func (x *UpdateAccountRequest) GetAccountHolderName() string {
@@ -717,8 +717,8 @@ func (x *UpdateAccountResponse) GetAccount() *Account {
 
 type DeleteAccountRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccountId     uint32                 `protobuf:"varint,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
-	UserId        uint32                 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	AccountId     string                 `protobuf:"bytes,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -753,18 +753,18 @@ func (*DeleteAccountRequest) Descriptor() ([]byte, []int) {
 	return file_proto_account_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *DeleteAccountRequest) GetAccountId() uint32 {
+func (x *DeleteAccountRequest) GetAccountId() string {
 	if x != nil {
 		return x.AccountId
 	}
-	return 0
+	return ""
 }
 
-func (x *DeleteAccountRequest) GetUserId() uint32 {
+func (x *DeleteAccountRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 type DeleteAccountResponse struct {
@@ -821,8 +821,8 @@ func (x *DeleteAccountResponse) GetMessage() string {
 
 type GetBalanceRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccountId     uint32                 `protobuf:"varint,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
-	UserId        uint32                 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	AccountId     string                 `protobuf:"bytes,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -857,18 +857,18 @@ func (*GetBalanceRequest) Descriptor() ([]byte, []int) {
 	return file_proto_account_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *GetBalanceRequest) GetAccountId() uint32 {
+func (x *GetBalanceRequest) GetAccountId() string {
 	if x != nil {
 		return x.AccountId
 	}
-	return 0
+	return ""
 }
 
-func (x *GetBalanceRequest) GetUserId() uint32 {
+func (x *GetBalanceRequest) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 type GetBalanceResponse struct {
@@ -941,7 +941,7 @@ func (x *GetBalanceResponse) GetCurrency() string {
 
 type UpdateBalanceRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccountId     uint32                 `protobuf:"varint,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
+	AccountId     string                 `protobuf:"bytes,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
 	Amount        float64                `protobuf:"fixed64,2,opt,name=amount,proto3" json:"amount,omitempty"`
 	TransactionId string                 `protobuf:"bytes,3,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -978,11 +978,11 @@ func (*UpdateBalanceRequest) Descriptor() ([]byte, []int) {
 	return file_proto_account_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *UpdateBalanceRequest) GetAccountId() uint32 {
+func (x *UpdateBalanceRequest) GetAccountId() string {
 	if x != nil {
 		return x.AccountId
 	}
-	return 0
+	return ""
 }
 
 func (x *UpdateBalanceRequest) GetAmount() float64 {
@@ -1065,8 +1065,8 @@ const file_proto_account_proto_rawDesc = "" +
 	"\n" +
 	"\x13proto/account.proto\x12\aaccount\"\xfa\x02\n" +
 	"\aAccount\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\rR\x02id\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\rR\x06userId\x12%\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12%\n" +
 	"\x0eaccount_number\x18\x03 \x01(\tR\raccountNumber\x12\x12\n" +
 	"\x04iban\x18\x04 \x01(\tR\x04iban\x12.\n" +
 	"\x13account_holder_name\x18\x05 \x01(\tR\x11accountHolderName\x127\n" +
@@ -1080,7 +1080,7 @@ const file_proto_account_proto_rawDesc = "" +
 	"\n" +
 	"updated_at\x18\v \x01(\tR\tupdatedAt\"\xb4\x01\n" +
 	"\x14CreateAccountRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\rR\x06userId\x12.\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12.\n" +
 	"\x13account_holder_name\x18\x02 \x01(\tR\x11accountHolderName\x127\n" +
 	"\faccount_type\x18\x03 \x01(\x0e2\x14.account.AccountTypeR\vaccountType\x12\x1a\n" +
 	"\bcurrency\x18\x04 \x01(\tR\bcurrency\"w\n" +
@@ -1090,22 +1090,22 @@ const file_proto_account_proto_rawDesc = "" +
 	"\aaccount\x18\x03 \x01(\v2\x10.account.AccountR\aaccount\"K\n" +
 	"\x11GetAccountRequest\x12\x1d\n" +
 	"\n" +
-	"account_id\x18\x01 \x01(\rR\taccountId\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\rR\x06userId\"t\n" +
+	"account_id\x18\x01 \x01(\tR\taccountId\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\"t\n" +
 	"\x12GetAccountResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12*\n" +
 	"\aaccount\x18\x03 \x01(\v2\x10.account.AccountR\aaccount\"3\n" +
 	"\x18GetAccountsByUserRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\rR\x06userId\"}\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"}\n" +
 	"\x19GetAccountsByUserResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12,\n" +
 	"\baccounts\x18\x03 \x03(\v2\x10.account.AccountR\baccounts\"\xdb\x01\n" +
 	"\x14UpdateAccountRequest\x12\x1d\n" +
 	"\n" +
-	"account_id\x18\x01 \x01(\rR\taccountId\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\rR\x06userId\x123\n" +
+	"account_id\x18\x01 \x01(\tR\taccountId\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x123\n" +
 	"\x13account_holder_name\x18\x03 \x01(\tH\x00R\x11accountHolderName\x88\x01\x01\x123\n" +
 	"\x06status\x18\x04 \x01(\x0e2\x16.account.AccountStatusH\x01R\x06status\x88\x01\x01B\x16\n" +
 	"\x14_account_holder_nameB\t\n" +
@@ -1116,15 +1116,15 @@ const file_proto_account_proto_rawDesc = "" +
 	"\aaccount\x18\x03 \x01(\v2\x10.account.AccountR\aaccount\"N\n" +
 	"\x14DeleteAccountRequest\x12\x1d\n" +
 	"\n" +
-	"account_id\x18\x01 \x01(\rR\taccountId\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\rR\x06userId\"K\n" +
+	"account_id\x18\x01 \x01(\tR\taccountId\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\"K\n" +
 	"\x15DeleteAccountResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\"K\n" +
 	"\x11GetBalanceRequest\x12\x1d\n" +
 	"\n" +
-	"account_id\x18\x01 \x01(\rR\taccountId\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\rR\x06userId\"~\n" +
+	"account_id\x18\x01 \x01(\tR\taccountId\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\"~\n" +
 	"\x12GetBalanceResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12\x18\n" +
@@ -1132,7 +1132,7 @@ const file_proto_account_proto_rawDesc = "" +
 	"\bcurrency\x18\x04 \x01(\tR\bcurrency\"t\n" +
 	"\x14UpdateBalanceRequest\x12\x1d\n" +
 	"\n" +
-	"account_id\x18\x01 \x01(\rR\taccountId\x12\x16\n" +
+	"account_id\x18\x01 \x01(\tR\taccountId\x12\x16\n" +
 	"\x06amount\x18\x02 \x01(\x01R\x06amount\x12%\n" +
 	"\x0etransaction_id\x18\x03 \x01(\tR\rtransactionId\"l\n" +
 	"\x15UpdateBalanceResponse\x12\x18\n" +

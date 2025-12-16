@@ -3,6 +3,7 @@ module account-service
 go 1.24.6
 
 require (
+	github.com/google/uuid v1.6.0
 	github.com/sirupsen/logrus v1.9.3
 	google.golang.org/grpc v1.77.0
 	google.golang.org/protobuf v1.36.10

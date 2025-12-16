@@ -4,8 +4,8 @@ import type { AccountType as _account_AccountType, AccountType__Output as _accou
 import type { AccountStatus as _account_AccountStatus, AccountStatus__Output as _account_AccountStatus__Output } from '../account/AccountStatus';
 
 export interface Account {
-  'id'?: (number);
-  'userId'?: (number);
+  'id'?: (string);
+  'userId'?: (string);
   'accountNumber'?: (string);
   'iban'?: (string);
   'accountHolderName'?: (string);
@@ -18,8 +18,8 @@ export interface Account {
 }
 
 export interface Account__Output {
-  'id': (number);
-  'userId': (number);
+  'id': (string);
+  'userId': (string);
   'accountNumber': (string);
   'iban': (string);
   'accountHolderName': (string);

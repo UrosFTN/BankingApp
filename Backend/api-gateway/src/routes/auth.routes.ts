@@ -12,10 +12,7 @@ const authRoutes: FastifyPluginAsync = async (fastify: FastifyInstance) => {
         access_token: token,
       });
       if (validation?.valid) {
-        const userId =
-          typeof validation.user_id === "string"
-            ? parseInt(validation.user_id, 10)
-            : validation.user_id;
+        const userId = validation.user_id;
         (request as any).user = { id: userId };
         (request as any).accessToken = token;
       }

@@ -29,8 +29,8 @@ enum AccountStatus {
 }
 
 message Account {
-  uint32 id = 1;
-  uint32 user_id = 2;
+  string id = 1;
+  string user_id = 2;
   string account_number = 3;
   string iban = 4;
   string account_holder_name = 5;
@@ -43,7 +43,7 @@ message Account {
 }
 
 message CreateAccountRequest {
-  uint32 user_id = 1;
+  string user_id = 1;
   string account_holder_name = 2;
   AccountType account_type = 3;
   string currency = 4;
@@ -56,8 +56,8 @@ message CreateAccountResponse {
 }
 
 message GetAccountRequest {
-  uint32 account_id = 1;
-  uint32 user_id = 2; 
+  string account_id = 1;
+  string user_id = 2; 
 }
 
 message GetAccountResponse {
@@ -67,7 +67,7 @@ message GetAccountResponse {
 }
 
 message GetAccountsByUserRequest {
-  uint32 user_id = 1;
+  string user_id = 1;
 }
 
 message GetAccountsByUserResponse {
@@ -77,8 +77,8 @@ message GetAccountsByUserResponse {
 }
 
 message UpdateAccountRequest {
-  uint32 account_id = 1;
-  uint32 user_id = 2; 
+  string account_id = 1;
+  string user_id = 2; 
   optional string account_holder_name = 3;
   optional AccountStatus status = 4;
 }
@@ -90,8 +90,8 @@ message UpdateAccountResponse {
 }
 
 message DeleteAccountRequest {
-  uint32 account_id = 1;
-  uint32 user_id = 2; 
+  string account_id = 1;
+  string user_id = 2; 
 }
 
 message DeleteAccountResponse {
@@ -100,8 +100,8 @@ message DeleteAccountResponse {
 }
 
 message GetBalanceRequest {
-  uint32 account_id = 1;
-  uint32 user_id = 2; 
+  string account_id = 1;
+  string user_id = 2; 
 }
 
 message GetBalanceResponse {
@@ -112,7 +112,7 @@ message GetBalanceResponse {
 }
 
 message UpdateBalanceRequest {
-  uint32 account_id = 1;
+  string account_id = 1;
   double amount = 2;
   string transaction_id = 3; 
 }

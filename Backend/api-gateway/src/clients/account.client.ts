@@ -19,7 +19,7 @@ const accountPackage = (grpc.loadPackageDefinition(accountPackageDef) as any)
 type GrpcCallback<T> = (err: grpc.ServiceError | null, response: T) => void;
 
 export interface CreateAccountRequest {
-  user_id: number;
+  user_id: string;
   account_holder_name: string;
   account_type: number;
   currency: string;
@@ -32,8 +32,8 @@ export interface CreateAccountResponse {
 }
 
 export interface GetAccountRequest {
-  account_id: number;
-  user_id: number;
+  account_id: string;
+  user_id: string;
 }
 
 export interface GetAccountResponse {
@@ -43,7 +43,7 @@ export interface GetAccountResponse {
 }
 
 export interface GetAccountsByUserRequest {
-  user_id: number;
+  user_id: string;
 }
 
 export interface GetAccountsByUserResponse {
@@ -53,8 +53,8 @@ export interface GetAccountsByUserResponse {
 }
 
 export interface DeleteAccountRequest {
-  account_id: number;
-  user_id: number;
+  account_id: string;
+  user_id: string;
 }
 
 export interface DeleteAccountResponse {
@@ -63,8 +63,8 @@ export interface DeleteAccountResponse {
 }
 
 export interface Account {
-  id: number;
-  user_id: number;
+  id: string;
+  user_id: string;
   account_number: string;
   iban: string;
   account_holder_name: string;
