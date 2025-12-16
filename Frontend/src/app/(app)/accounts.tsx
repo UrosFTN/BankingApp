@@ -9,12 +9,13 @@ import {
   RefreshControl,
 } from "react-native";
 import { colors } from "../../styles/colors";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useAccountStore } from "../../store/accountStore";
 import { Account } from "../../services/api/account.api";
 export default function AccountsScreen() {
   const router = useRouter();
+  const { selectMode } = useLocalSearchParams<{ selectMode?: string }>();
 
   const {
     accounts,
@@ -34,6 +35,10 @@ export default function AccountsScreen() {
 
   const handleAccountPress = (account: Account) => {
     setSelectedAccount(account);
+    if (selectMode === "new-payment") {
+      router.back();
+      return;
+    }
     router.navigate("/(app)/account-details");
   };
   const cap = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);

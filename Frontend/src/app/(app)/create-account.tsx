@@ -30,10 +30,10 @@ const CreateAccountScreen = () => {
   ];
 
   const currencies = [
-    { label: "USD - US Dollar", value: "USD" },
-    { label: "EUR - Euro", value: "EUR" },
-    { label: "GBP - British Pound", value: "GBP" },
-    { label: "RSD - Serbian Dinar", value: "RSD" },
+    { label: "USD", value: "USD" },
+    { label: "EUR", value: "EUR" },
+    { label: "GBP", value: "GBP" },
+    { label: "RSD", value: "RSD" },
   ];
 
   const handleCreateAccount = async () => {
