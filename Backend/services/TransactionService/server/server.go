@@ -34,8 +34,8 @@ func (s *Server) Start() error {
 
     s.grpcServer = grpc.NewServer()
 
-    TransactionService := services.NewTransactionService(config.GetDB())
-    proto.RegisterTransactionServiceServer(s.grpcServer, TransactionService)
+    transactionService := services.NewTransactionService(config.GetDB())
+    proto.RegisterTransactionServiceServer(s.grpcServer, transactionService)
 
     logrus.Infof("gRPC server listening on port %s", port)
 
