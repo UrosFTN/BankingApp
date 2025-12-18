@@ -26,7 +26,7 @@ type TransactionStatus int32
 const (
 	TransactionStatus_APPROVED TransactionStatus = 0
 	TransactionStatus_PENDING  TransactionStatus = 1
-	TransactionStatus_CANCELED TransactionStatus = 2
+	TransactionStatus_DECLINED TransactionStatus = 2
 )
 
 // Enum value maps for TransactionStatus.
@@ -34,12 +34,12 @@ var (
 	TransactionStatus_name = map[int32]string{
 		0: "APPROVED",
 		1: "PENDING",
-		2: "CANCELED",
+		2: "DECLINED",
 	}
 	TransactionStatus_value = map[string]int32{
 		"APPROVED": 0,
 		"PENDING":  1,
-		"CANCELED": 2,
+		"DECLINED": 2,
 	}
 )
 
@@ -504,7 +504,7 @@ const file_proto_transaction_proto_rawDesc = "" +
 	"\x11TransactionStatus\x12\f\n" +
 	"\bAPPROVED\x10\x00\x12\v\n" +
 	"\aPENDING\x10\x01\x12\f\n" +
-	"\bCANCELED\x10\x022\xe8\x01\n" +
+	"\bDECLINED\x10\x022\xe8\x01\n" +
 	"\x12TransactionService\x12b\n" +
 	"\x11CreateTransaction\x12%.transaction.CreateTransactionRequest\x1a&.transaction.CreateTransactionResponse\x12n\n" +
 	"\x15GetTransactionsByUser\x12).transaction.GetTransactionsByUserRequest\x1a*.transaction.GetTransactionsByUserResponseB\tZ\a./protob\x06proto3"

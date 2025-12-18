@@ -4,6 +4,7 @@ package transaction;
 
 option go_package = "./proto";
 
+
 service TransactionService {
   rpc CreateTransaction (CreateTransactionRequest) returns (CreateTransactionResponse);
   rpc GetTransactionsByUser (GetTransactionsByUserRequest) returns (GetTransactionsByUserResponse);
@@ -12,7 +13,7 @@ service TransactionService {
 enum TransactionStatus {
   APPROVED = 0;
   PENDING = 1;
-  CANCELED = 2;
+  DECLINED = 2;
 }
 
 message Transaction {
