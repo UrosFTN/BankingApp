@@ -2,13 +2,21 @@ syntax = "proto3";
 
 package account;
 
+// AccountService manages user bank accounts and balances
 service AccountService {
+  // CreateAccount creates a new bank account for a user
   rpc CreateAccount (CreateAccountRequest) returns (CreateAccountResponse);
+  // GetAccount retrieves a specific account by ID
   rpc GetAccount (GetAccountRequest) returns (GetAccountResponse);
+  // GetAccountsByUser retrieves all accounts belonging to a user
   rpc GetAccountsByUser (GetAccountsByUserRequest) returns (GetAccountsByUserResponse);
+  // UpdateAccount updates account details
   rpc UpdateAccount (UpdateAccountRequest) returns (UpdateAccountResponse);
+  // DeleteAccount deletes an account
   rpc DeleteAccount (DeleteAccountRequest) returns (DeleteAccountResponse);
+  // GetBalance retrieves the current balance of an account
   rpc GetBalance (GetBalanceRequest) returns (GetBalanceResponse);
+  // UpdateBalance updates the balance of an account
   rpc UpdateBalance (UpdateBalanceRequest) returns (UpdateBalanceResponse);
 }
 

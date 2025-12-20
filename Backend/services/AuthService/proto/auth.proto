@@ -2,25 +2,38 @@ syntax = "proto3";
 
 package auth;
 
+// AuthService provides authentication, authorization, and user management
 service AuthService {
   // User Registration & Login
+  // Register creates a new user account
   rpc Register (RegisterRequest) returns (AuthResponse);
+  // Login authenticates a user with email and password
   rpc Login (LoginRequest) returns (AuthResponse);
+  // LoginWithDevice authenticates a user using a registered device token
   rpc LoginWithDevice (DeviceLoginRequest) returns (AuthResponse);
   
   // Token Management
+  // RefreshToken generates a new access token using a refresh token
   rpc RefreshToken (RefreshTokenRequest) returns (AuthResponse);
+  // RevokeToken invalidates a refresh token
   rpc RevokeToken (RevokeTokenRequest) returns (EmptyResponse);
+  // ValidateToken checks if an access token is valid
   rpc ValidateToken (ValidateTokenRequest) returns (ValidateTokenResponse);
   
   // Device Management
+  // RegisterDevice registers a new trusted device for a user
   rpc RegisterDevice (RegisterDeviceRequest) returns (RegisterDeviceResponse);
+  // GetUserDevices retrieves all registered devices for a user
   rpc GetUserDevices (GetUserDevicesRequest) returns (GetUserDevicesResponse);
+  // RevokeDevice removes a registered device
   rpc RevokeDevice (RevokeDeviceRequest) returns (EmptyResponse);
   
   // Password Management
+  // RequestPasswordReset initiates a password reset request
   rpc RequestPasswordReset (PasswordResetRequest) returns (PasswordResetResponse);
+  // ResetPassword completes a password reset using a reset token
   rpc ResetPassword (ResetPasswordRequest) returns (EmptyResponse);
+  // ChangePassword allows authenticated users to change their password
   rpc ChangePassword (ChangePasswordRequest) returns (EmptyResponse);
 }
 
