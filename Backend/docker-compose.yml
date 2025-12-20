@@ -76,6 +76,45 @@ services:
     networks:
       - banking-network
 
+  transaction-db:
+    image: postgres:16-alpine
+    container_name: transaction-db
+    environment:
+      POSTGRES_DB: transaction_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - transaction-db-data:/var/lib/postgresql/data
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  transaction-service:
+    build:
+      context: ./services/TransactionService
+      dockerfile: Dockerfile
+    container_name: transaction-service
+    environment:
+      PORT: 50053
+      DB_HOST: transaction-db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: transaction_db
+    ports:
+      - "50053:50053"
+    depends_on:
+      transaction-db:
+        condition: service_healthy
+    networks:
+      - banking-network
+
   api-gateway:
     build:
       context: ./api-gateway
@@ -86,6 +125,7 @@ services:
     depends_on:
       - auth-service
       - account-service
+      - transaction-service
     networks:
       - banking-network
     volumes:
@@ -99,3 +139,4 @@ networks:
 volumes:
   auth-db-data:
   account-db-data:
+  transaction-db-data:
