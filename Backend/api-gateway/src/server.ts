@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { serverConfig } from "./config";
 import authRoutes from "./routes/auth.routes";
 import accountRoutes from "./routes/account.routes";
-//import transactionRoutes from "./routes/transaction.routes";
+import transactionRoutes from "./routes/transaction.routes";
 //import notificationRoutes from "./routes/notification.routes";
 
 dotenv.config();
@@ -44,10 +44,9 @@ fastify.get("/", async (request, reply) => {
 // Register routes
 fastify.register(authRoutes, { prefix: "/api/auth" });
 fastify.register(accountRoutes, { prefix: "/api/accounts" });
-/*
 fastify.register(transactionRoutes, { prefix: "/api/transactions" });
-fastify.register(notificationRoutes, { prefix: "/api/notifications" });
-*/
+//fastify.register(notificationRoutes, { prefix: "/api/notifications" });
+
 const start = async () => {
   try {
     await fastify.listen({
