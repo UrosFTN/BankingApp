@@ -56,24 +56,71 @@ const TransactionsScreen = () => {
   };
 
   const renderTransaction = (txn: Transaction) => {
-    const isSender = txn.sender_id === user?.id;
-    const isReceiver = txn.receiver_id === user?.id;
+    const noteLower = (txn.note || "").toLowerCase();
+    const isDeposit = noteLower.startsWith("deposit");
+    const isWithdraw = noteLower.startsWith("withdraw");
+
+    // For deposits and withdrawals, override direction/sign by note
+    const isSender = !isDeposit && txn.sender_id === user?.id;
+    const isReceiver = !isWithdraw && txn.receiver_id === user?.id;
     const amount = parseFloat(txn.amount.toString());
+
+    const typeText = isDeposit
+      ? "Deposit"
+      : isWithdraw
+      ? "Withdraw"
+      : isSender
+      ? "Sent"
+      : "Received";
+
+    const arrowName = isDeposit
+      ? "arrow-down"
+      : isWithdraw
+      ? "arrow-up"
+      : isSender
+      ? "arrow-up"
+      : "arrow-down";
+
+    const arrowColor = isDeposit
+      ? colors.lime
+      : isWithdraw
+      ? colors.red
+      : isSender
+      ? colors.red
+      : colors.lime;
+
+    const sign = isDeposit ? "+" : isWithdraw ? "-" : isSender ? "-" : "+";
+    const amountColor = isDeposit
+      ? colors.lime
+      : isWithdraw
+      ? colors.red
+      : isSender
+      ? colors.red
+      : colors.lime;
+
+    const partyLabel = isDeposit
+      ? "To"
+      : isWithdraw
+      ? "From"
+      : isSender
+      ? "To"
+      : "From";
+    const partyAccount = isDeposit
+      ? txn.receiver_account_number
+      : isWithdraw
+      ? txn.sender_account_number
+      : isSender
+      ? txn.receiver_account_number
+      : txn.sender_account_number;
 
     return (
       <View key={txn.id} style={styles.card}>
         <View style={styles.header}>
           <View style={styles.iconContainer}>
-            <Ionicons
-              name={isSender ? "arrow-up" : "arrow-down"}
-              size={20}
-              color={isSender ? colors.red : colors.lime}
-            />
+            <Ionicons name={arrowName} size={20} color={arrowColor} />
           </View>
           <View style={styles.headerText}>
-            <Text style={styles.transactionType}>
-              {isSender ? "Sent" : "Received"}
-            </Text>
+            <Text style={styles.transactionType}>{typeText}</Text>
             <Text style={styles.date}>{formatDate(txn.created_at)}</Text>
           </View>
           <Text style={[styles.status, { color: getStatusColor(txn.status) }]}>
@@ -83,23 +130,14 @@ const TransactionsScreen = () => {
 
         <View style={styles.details}>
           <View style={styles.row}>
-            <Text style={styles.label}>{isSender ? "To" : "From"}:</Text>
-            <Text style={styles.value}>
-              {isSender
-                ? txn.receiver_account_number
-                : txn.sender_account_number}
-            </Text>
+            <Text style={styles.label}>{partyLabel}:</Text>
+            <Text style={styles.value}>{partyAccount}</Text>
           </View>
 
           <View style={styles.row}>
             <Text style={styles.label}>Amount:</Text>
-            <Text
-              style={[
-                styles.amount,
-                { color: isSender ? colors.red : colors.lime },
-              ]}
-            >
-              {isSender ? "-" : "+"}
+            <Text style={[styles.amount, { color: amountColor }]}>
+              {sign}
               {amount.toFixed(2)} {txn.currency}
             </Text>
           </View>
