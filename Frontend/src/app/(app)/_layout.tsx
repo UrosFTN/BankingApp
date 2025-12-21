@@ -4,6 +4,7 @@ import { Stack, useRouter } from "expo-router";
 import { colors } from "../../styles/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuthStore } from "../../store/authStore";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function AppLayout() {
   const [localError, setLocalError] = useState("");
@@ -27,7 +28,7 @@ export default function AppLayout() {
         <Text style={styles.headerTitle}>BankingApp</Text>
         <View style={styles.headerButtons}>
           <TouchableOpacity onPress={() => {}}>
-            <Text style={styles.headerButton}>Settings</Text>
+            <Ionicons name="settings-outline" size={24} color={colors.lime} />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleLogout}>
             <Text style={styles.headerButton}>Logout</Text>
@@ -69,7 +70,11 @@ export default function AppLayout() {
           style={styles.tabItem}
           onPress={() => router.push("/(app)/profile")}
         >
-          <Text style={styles.tabText}>Profile</Text>
+          <Ionicons
+            name="person-circle-outline"
+            size={32}
+            color={colors.lime}
+          />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -111,7 +116,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    paddingVertical: 12,
+    paddingVertical: 6,
     borderTopColor: colors.gray,
     borderTopWidth: 1,
   },
