@@ -1,7 +1,6 @@
 package services
 
 import (
-	accountProto "account-service/proto"
 	"context"
 	"errors"
 	"transaction-service/models"
@@ -18,7 +17,7 @@ import (
 type TransactionService struct {
 	proto.UnimplementedTransactionServiceServer
 	db            *gorm.DB
-	accountClient accountProto.AccountServiceClient
+	accountClient proto.AccountServiceClient
 }
 
 func NewTransactionService(db *gorm.DB) *TransactionService {
@@ -28,7 +27,7 @@ func NewTransactionService(db *gorm.DB) *TransactionService {
 		logrus.WithError(err).Fatal("Failed to connect to AccountService")
 	}
 
-	accountClient := accountProto.NewAccountServiceClient(conn)
+	accountClient := proto.NewAccountServiceClient(conn)
 
 	return &TransactionService{
 		db:            db,
@@ -37,20 +36,70 @@ func NewTransactionService(db *gorm.DB) *TransactionService {
 }
 
 func (s *TransactionService) CreateTransaction(ctx context.Context, req *proto.CreateTransactionRequest) (*proto.CreateTransactionResponse, error) {
+	// Fetch sender account by account number
+	senderResp, err := s.accountClient.GetAccountByNumber(ctx, &proto.GetAccountByNumberRequest{
+		AccountNumber: req.SenderAccountNumber,
+	})
+	if err != nil || !senderResp.Success || senderResp.Account == nil {
+		logrus.WithError(err).Error("Sender account not found")
+		return nil, errors.New("sender account not found")
+	}
+	senderAccount := senderResp.Account
+
+	// Validate sender account is active
+	if senderAccount.Status != proto.AccountStatus_ACTIVE {
+		logrus.Error("Sender account is not active")
+		return nil, errors.New("sender account is not active")
+	}
+
+	// Fetch receiver account by account number
+	receiverResp, err := s.accountClient.GetAccountByNumber(ctx, &proto.GetAccountByNumberRequest{
+		AccountNumber: req.ReceiverAccountNumber,
+	})
+	if err != nil || !receiverResp.Success || receiverResp.Account == nil {
+		logrus.WithError(err).Error("Receiver account not found")
+		return nil, errors.New("receiver account not found")
+	}
+	receiverAccount := receiverResp.Account
+
+	// Validate receiver account is active
+	if receiverAccount.Status != proto.AccountStatus_ACTIVE {
+		logrus.Error("Receiver account is not active")
+		return nil, errors.New("receiver account is not active")
+	}
+
+	// Validate currency match
+	if senderAccount.Currency != req.Currency {
+		logrus.Error("Sender account currency does not match transaction currency")
+		return nil, errors.New("sender account currency does not match transaction currency")
+	}
+	if receiverAccount.Currency != req.Currency {
+		logrus.Error("Receiver account currency does not match transaction currency")
+		return nil, errors.New("receiver account currency does not match transaction currency")
+	}
+
+	// Validate sufficient balance
+	if senderAccount.Balance < req.Amount {
+		logrus.Error("Insufficient balance in sender account")
+		return nil, errors.New("insufficient balance in sender account")
+	}
+
 	// Create transaction with pending status
 	txn := &models.Transaction{
-		ID:                uuid.New(),
-		SenderID:          uuid.MustParse(req.SenderId),
-		SenderAccountID:   uuid.MustParse(req.SenderAccountId),
-		ReceiverID:        uuid.MustParse(req.ReceiverId),
-		ReceiverAccountID: uuid.MustParse(req.ReceiverAccountId),
-		Amount:            req.Amount,
-		Currency:          req.Currency,
-		TransactionStatus: models.StatusPending,
-		Note:              req.Note,
-		PaymentCode:       req.PaymentCode,
-		Model:             req.Model,
-		CallNumber:        req.CallNumber,
+		ID:                    uuid.New(),
+		SenderID:              uuid.MustParse(senderAccount.UserId),
+		SenderAccountID:       uuid.MustParse(senderAccount.Id),
+		SenderAccountNumber:   req.SenderAccountNumber,
+		ReceiverID:            uuid.MustParse(receiverAccount.UserId),
+		ReceiverAccountID:     uuid.MustParse(receiverAccount.Id),
+		ReceiverAccountNumber: req.ReceiverAccountNumber,
+		Amount:                req.Amount,
+		Currency:              req.Currency,
+		TransactionStatus:     models.StatusPending,
+		Note:                  req.Note,
+		PaymentCode:           req.PaymentCode,
+		Model:                 req.Model,
+		CallNumber:            req.CallNumber,
 	}
 
 	// Save transaction as pending
@@ -60,8 +109,8 @@ func (s *TransactionService) CreateTransaction(ctx context.Context, req *proto.C
 	}
 
 	// Call AccountService to deduct from sender
-	deductResp, err := s.accountClient.UpdateBalance(ctx, &accountProto.UpdateBalanceRequest{
-		AccountId: req.SenderAccountId,
+	deductResp, err := s.accountClient.UpdateBalance(ctx, &proto.UpdateBalanceRequest{
+		AccountId: senderAccount.Id,
 		Amount:    -req.Amount,
 	})
 	if err != nil || !deductResp.Success {
@@ -72,14 +121,14 @@ func (s *TransactionService) CreateTransaction(ctx context.Context, req *proto.C
 	}
 
 	// Call AccountService to add to receiver
-	addResp, err := s.accountClient.UpdateBalance(ctx, &accountProto.UpdateBalanceRequest{
-		AccountId: req.ReceiverAccountId,
+	addResp, err := s.accountClient.UpdateBalance(ctx, &proto.UpdateBalanceRequest{
+		AccountId: receiverAccount.Id,
 		Amount:    req.Amount,
 	})
 	if err != nil || !addResp.Success {
 		// Rollback: refund sender
-		s.accountClient.UpdateBalance(ctx, &accountProto.UpdateBalanceRequest{
-			AccountId: req.SenderAccountId,
+		s.accountClient.UpdateBalance(ctx, &proto.UpdateBalanceRequest{
+			AccountId: senderAccount.Id,
 			Amount:    req.Amount,
 		})
 		txn.TransactionStatus = models.StatusDeclined
@@ -132,18 +181,20 @@ func transactionToProto(t *models.Transaction) *proto.Transaction {
 	}
 
 	return &proto.Transaction{
-		Id:                t.ID.String(),
-		SenderId:          t.SenderID.String(),
-		SenderAccountId:   t.SenderAccountID.String(),
-		ReceiverId:        t.ReceiverID.String(),
-		ReceiverAccountId: t.ReceiverAccountID.String(),
-		Amount:            t.Amount,
-		Currency:          t.Currency,
-		Status:            status,
-		Note:              t.Note,
-		PaymentCode:       t.PaymentCode,
-		Model:             t.Model,
-		CallNumber:        t.CallNumber,
-		CreatedAt:         t.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		Id:                    t.ID.String(),
+		SenderId:              t.SenderID.String(),
+		SenderAccountId:       t.SenderAccountID.String(),
+		SenderAccountNumber:   t.SenderAccountNumber,
+		ReceiverId:            t.ReceiverID.String(),
+		ReceiverAccountId:     t.ReceiverAccountID.String(),
+		ReceiverAccountNumber: t.ReceiverAccountNumber,
+		Amount:                t.Amount,
+		Currency:              t.Currency,
+		Status:                status,
+		Note:                  t.Note,
+		PaymentCode:           t.PaymentCode,
+		Model:                 t.Model,
+		CallNumber:            t.CallNumber,
+		CreatedAt:             t.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
 	}
 }

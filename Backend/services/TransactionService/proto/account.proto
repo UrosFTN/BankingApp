@@ -1,0 +1,142 @@
+syntax = "proto3";
+
+package account;
+
+option go_package = "./proto";
+
+// AccountService manages user bank accounts and balances
+service AccountService {
+  // CreateAccount creates a new bank account for a user
+  rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse);
+  // GetAccount retrieves a specific account by ID
+  rpc GetAccount(GetAccountRequest) returns (GetAccountResponse);
+  // GetAccountsByUser retrieves all accounts belonging to a user
+  rpc GetAccountsByUser(GetAccountsByUserRequest) returns (GetAccountsByUserResponse);
+  // UpdateAccount updates account details
+  rpc UpdateAccount(UpdateAccountRequest) returns (UpdateAccountResponse);
+  // DeleteAccount deletes an account
+  rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);
+  // GetBalance retrieves the current balance of an account
+  rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse);
+  // UpdateBalance updates the balance of an account
+  rpc UpdateBalance(UpdateBalanceRequest) returns (UpdateBalanceResponse);
+  // GetAccountByNumber retrieves an account by account number
+  rpc GetAccountByNumber(GetAccountByNumberRequest) returns (GetAccountByNumberResponse);
+}
+
+enum AccountType {
+  CHECKING = 0;
+  SAVINGS = 1;
+  CREDIT = 2;
+}
+
+enum AccountStatus {
+  ACTIVE = 0;
+  CLOSED = 1;
+  FROZEN = 2;
+}
+
+message Account {
+  string id = 1;
+  string user_id = 2;
+  string account_number = 3;
+  string iban = 4;
+  string account_holder_name = 5;
+  AccountType account_type = 6;
+  double balance = 7;
+  string currency = 8;
+  AccountStatus status = 9;
+  string created_at = 10;
+  string updated_at = 11;
+}
+
+message CreateAccountRequest {
+  string user_id = 1;
+  string account_holder_name = 2;
+  AccountType account_type = 3;
+  string currency = 4;
+}
+
+message CreateAccountResponse {
+  bool success = 1;
+  string message = 2;
+  Account account = 3;
+}
+
+message GetAccountRequest {
+  string account_id = 1;
+  string user_id = 2; 
+}
+
+message GetAccountResponse {
+  bool success = 1;
+  string message = 2;
+  Account account = 3;
+}
+
+message GetAccountsByUserRequest {
+  string user_id = 1;
+}
+
+message GetAccountsByUserResponse {
+  bool success = 1;
+  string message = 2;
+  repeated Account accounts = 3;
+}
+
+message UpdateAccountRequest {
+  string account_id = 1;
+  string user_id = 2; 
+  optional string account_holder_name = 3;
+  optional AccountStatus status = 4;
+}
+
+message UpdateAccountResponse {
+  bool success = 1;
+  string message = 2;
+  Account account = 3;
+}
+
+message DeleteAccountRequest {
+  string account_id = 1;
+  string user_id = 2; 
+}
+
+message DeleteAccountResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetBalanceRequest {
+  string account_id = 1;
+  string user_id = 2; 
+}
+
+message GetBalanceResponse {
+  bool success = 1;
+  string message = 2;
+  double balance = 3;
+  string currency = 4;
+}
+
+message UpdateBalanceRequest {
+  string account_id = 1;
+  double amount = 2;
+  string transaction_id = 3; 
+}
+
+message UpdateBalanceResponse {
+  bool success = 1;
+  string message = 2;
+  double new_balance = 3;
+}
+
+message GetAccountByNumberRequest {
+  string account_number = 1;
+}
+
+message GetAccountByNumberResponse {
+  bool success = 1;
+  string message = 2;
+  Account account = 3;
+}

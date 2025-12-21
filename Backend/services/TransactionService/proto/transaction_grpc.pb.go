@@ -26,8 +26,12 @@ const (
 // TransactionServiceClient is the client API for TransactionService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// TransactionService handles all transaction-related operations
 type TransactionServiceClient interface {
+	// CreateTransaction creates a new transaction between two accounts
 	CreateTransaction(ctx context.Context, in *CreateTransactionRequest, opts ...grpc.CallOption) (*CreateTransactionResponse, error)
+	// GetTransactionsByUser retrieves all transactions for a user (as sender or receiver)
 	GetTransactionsByUser(ctx context.Context, in *GetTransactionsByUserRequest, opts ...grpc.CallOption) (*GetTransactionsByUserResponse, error)
 }
 
@@ -62,8 +66,12 @@ func (c *transactionServiceClient) GetTransactionsByUser(ctx context.Context, in
 // TransactionServiceServer is the server API for TransactionService service.
 // All implementations must embed UnimplementedTransactionServiceServer
 // for forward compatibility.
+//
+// TransactionService handles all transaction-related operations
 type TransactionServiceServer interface {
+	// CreateTransaction creates a new transaction between two accounts
 	CreateTransaction(context.Context, *CreateTransactionRequest) (*CreateTransactionResponse, error)
+	// GetTransactionsByUser retrieves all transactions for a user (as sender or receiver)
 	GetTransactionsByUser(context.Context, *GetTransactionsByUserRequest) (*GetTransactionsByUserResponse, error)
 	mustEmbedUnimplementedTransactionServiceServer()
 }

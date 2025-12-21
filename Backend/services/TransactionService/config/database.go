@@ -25,7 +25,7 @@ type DatabaseConfig struct {
 func LoadDatabaseConfig() *DatabaseConfig {
     return &DatabaseConfig{
         Host:     getEnv("DB_HOST", "transaction-db"),
-        Port:     getEnv("DB_PORT", "5433"),
+        Port:     getEnv("DB_PORT", "5434"),
         User:     getEnv("DB_USER", "postgres"),
         Password: getEnv("DB_PASSWORD", "postgres"),
         DBName:   getEnv("DB_NAME", "transaction_db"),

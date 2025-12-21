@@ -18,8 +18,10 @@ type Transaction struct {
 	ID uuid.UUID `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id"`
 	SenderID uuid.UUID `gorm:"type:uuid;index;not null" json:"sender_id"`
 	SenderAccountID uuid.UUID `gorm:"type:uuid;index;not null" json:"sender_account_id"`
+	SenderAccountNumber string `gorm:"type:varchar(50);not null" json:"sender_account_number"`
 	ReceiverID uuid.UUID `gorm:"type:uuid;index;not null" json:"receiver_id"`
 	ReceiverAccountID uuid.UUID `gorm:"type:uuid;index;not null" json:"receiver_account_id"`
+	ReceiverAccountNumber string `gorm:"type:varchar(50);not null" json:"receiver_account_number"`
 	TransactionStatus TransactionStatus `gorm:"type:varchar(50);not null;default:'pending'" json:"status"`
 	CreatedAt time.Time `json:"created_at"`
 	Amount float64 `gorm:"type:decimal(15,2);not null;default:0" json:"amount"`

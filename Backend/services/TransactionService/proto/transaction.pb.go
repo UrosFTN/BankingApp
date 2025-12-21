@@ -71,22 +71,24 @@ func (TransactionStatus) EnumDescriptor() ([]byte, []int) {
 }
 
 type Transaction struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	Id                string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	SenderId          string                 `protobuf:"bytes,2,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
-	SenderAccountId   string                 `protobuf:"bytes,3,opt,name=sender_account_id,json=senderAccountId,proto3" json:"sender_account_id,omitempty"`
-	ReceiverId        string                 `protobuf:"bytes,4,opt,name=receiver_id,json=receiverId,proto3" json:"receiver_id,omitempty"`
-	ReceiverAccountId string                 `protobuf:"bytes,5,opt,name=receiver_account_id,json=receiverAccountId,proto3" json:"receiver_account_id,omitempty"`
-	Amount            float64                `protobuf:"fixed64,6,opt,name=amount,proto3" json:"amount,omitempty"`
-	Currency          string                 `protobuf:"bytes,7,opt,name=currency,proto3" json:"currency,omitempty"`
-	Status            TransactionStatus      `protobuf:"varint,8,opt,name=status,proto3,enum=transaction.TransactionStatus" json:"status,omitempty"`
-	Note              string                 `protobuf:"bytes,9,opt,name=note,proto3" json:"note,omitempty"`
-	PaymentCode       string                 `protobuf:"bytes,10,opt,name=payment_code,json=paymentCode,proto3" json:"payment_code,omitempty"`
-	Model             string                 `protobuf:"bytes,11,opt,name=model,proto3" json:"model,omitempty"`
-	CallNumber        string                 `protobuf:"bytes,12,opt,name=call_number,json=callNumber,proto3" json:"call_number,omitempty"`
-	CreatedAt         string                 `protobuf:"bytes,13,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	state                 protoimpl.MessageState `protogen:"open.v1"`
+	Id                    string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	SenderId              string                 `protobuf:"bytes,2,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
+	SenderAccountId       string                 `protobuf:"bytes,3,opt,name=sender_account_id,json=senderAccountId,proto3" json:"sender_account_id,omitempty"`
+	SenderAccountNumber   string                 `protobuf:"bytes,4,opt,name=sender_account_number,json=senderAccountNumber,proto3" json:"sender_account_number,omitempty"`
+	ReceiverId            string                 `protobuf:"bytes,5,opt,name=receiver_id,json=receiverId,proto3" json:"receiver_id,omitempty"`
+	ReceiverAccountId     string                 `protobuf:"bytes,6,opt,name=receiver_account_id,json=receiverAccountId,proto3" json:"receiver_account_id,omitempty"`
+	ReceiverAccountNumber string                 `protobuf:"bytes,7,opt,name=receiver_account_number,json=receiverAccountNumber,proto3" json:"receiver_account_number,omitempty"`
+	Amount                float64                `protobuf:"fixed64,8,opt,name=amount,proto3" json:"amount,omitempty"`
+	Currency              string                 `protobuf:"bytes,9,opt,name=currency,proto3" json:"currency,omitempty"`
+	Status                TransactionStatus      `protobuf:"varint,10,opt,name=status,proto3,enum=transaction.TransactionStatus" json:"status,omitempty"`
+	Note                  string                 `protobuf:"bytes,11,opt,name=note,proto3" json:"note,omitempty"`
+	PaymentCode           string                 `protobuf:"bytes,12,opt,name=payment_code,json=paymentCode,proto3" json:"payment_code,omitempty"`
+	Model                 string                 `protobuf:"bytes,13,opt,name=model,proto3" json:"model,omitempty"`
+	CallNumber            string                 `protobuf:"bytes,14,opt,name=call_number,json=callNumber,proto3" json:"call_number,omitempty"`
+	CreatedAt             string                 `protobuf:"bytes,15,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *Transaction) Reset() {
@@ -140,6 +142,13 @@ func (x *Transaction) GetSenderAccountId() string {
 	return ""
 }
 
+func (x *Transaction) GetSenderAccountNumber() string {
+	if x != nil {
+		return x.SenderAccountNumber
+	}
+	return ""
+}
+
 func (x *Transaction) GetReceiverId() string {
 	if x != nil {
 		return x.ReceiverId
@@ -150,6 +159,13 @@ func (x *Transaction) GetReceiverId() string {
 func (x *Transaction) GetReceiverAccountId() string {
 	if x != nil {
 		return x.ReceiverAccountId
+	}
+	return ""
+}
+
+func (x *Transaction) GetReceiverAccountNumber() string {
+	if x != nil {
+		return x.ReceiverAccountNumber
 	}
 	return ""
 }
@@ -211,19 +227,17 @@ func (x *Transaction) GetCreatedAt() string {
 }
 
 type CreateTransactionRequest struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	SenderId          string                 `protobuf:"bytes,1,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
-	SenderAccountId   string                 `protobuf:"bytes,2,opt,name=sender_account_id,json=senderAccountId,proto3" json:"sender_account_id,omitempty"`
-	ReceiverId        string                 `protobuf:"bytes,3,opt,name=receiver_id,json=receiverId,proto3" json:"receiver_id,omitempty"`
-	ReceiverAccountId string                 `protobuf:"bytes,4,opt,name=receiver_account_id,json=receiverAccountId,proto3" json:"receiver_account_id,omitempty"`
-	Amount            float64                `protobuf:"fixed64,5,opt,name=amount,proto3" json:"amount,omitempty"`
-	Currency          string                 `protobuf:"bytes,6,opt,name=currency,proto3" json:"currency,omitempty"`
-	Note              string                 `protobuf:"bytes,7,opt,name=note,proto3" json:"note,omitempty"`
-	PaymentCode       string                 `protobuf:"bytes,8,opt,name=payment_code,json=paymentCode,proto3" json:"payment_code,omitempty"`
-	Model             string                 `protobuf:"bytes,9,opt,name=model,proto3" json:"model,omitempty"`
-	CallNumber        string                 `protobuf:"bytes,10,opt,name=call_number,json=callNumber,proto3" json:"call_number,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	state                 protoimpl.MessageState `protogen:"open.v1"`
+	SenderAccountNumber   string                 `protobuf:"bytes,1,opt,name=sender_account_number,json=senderAccountNumber,proto3" json:"sender_account_number,omitempty"`
+	ReceiverAccountNumber string                 `protobuf:"bytes,2,opt,name=receiver_account_number,json=receiverAccountNumber,proto3" json:"receiver_account_number,omitempty"`
+	Amount                float64                `protobuf:"fixed64,3,opt,name=amount,proto3" json:"amount,omitempty"`
+	Currency              string                 `protobuf:"bytes,4,opt,name=currency,proto3" json:"currency,omitempty"`
+	Note                  string                 `protobuf:"bytes,5,opt,name=note,proto3" json:"note,omitempty"`
+	PaymentCode           string                 `protobuf:"bytes,6,opt,name=payment_code,json=paymentCode,proto3" json:"payment_code,omitempty"`
+	Model                 string                 `protobuf:"bytes,7,opt,name=model,proto3" json:"model,omitempty"`
+	CallNumber            string                 `protobuf:"bytes,8,opt,name=call_number,json=callNumber,proto3" json:"call_number,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
 }
 
 func (x *CreateTransactionRequest) Reset() {
@@ -256,30 +270,16 @@ func (*CreateTransactionRequest) Descriptor() ([]byte, []int) {
 	return file_proto_transaction_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CreateTransactionRequest) GetSenderId() string {
+func (x *CreateTransactionRequest) GetSenderAccountNumber() string {
 	if x != nil {
-		return x.SenderId
+		return x.SenderAccountNumber
 	}
 	return ""
 }
 
-func (x *CreateTransactionRequest) GetSenderAccountId() string {
+func (x *CreateTransactionRequest) GetReceiverAccountNumber() string {
 	if x != nil {
-		return x.SenderAccountId
-	}
-	return ""
-}
-
-func (x *CreateTransactionRequest) GetReceiverId() string {
-	if x != nil {
-		return x.ReceiverId
-	}
-	return ""
-}
-
-func (x *CreateTransactionRequest) GetReceiverAccountId() string {
-	if x != nil {
-		return x.ReceiverAccountId
+		return x.ReceiverAccountNumber
 	}
 	return ""
 }
@@ -462,38 +462,36 @@ var File_proto_transaction_proto protoreflect.FileDescriptor
 
 const file_proto_transaction_proto_rawDesc = "" +
 	"\n" +
-	"\x17proto/transaction.proto\x12\vtransaction\"\xb0\x03\n" +
+	"\x17proto/transaction.proto\x12\vtransaction\"\x9c\x04\n" +
 	"\vTransaction\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
 	"\tsender_id\x18\x02 \x01(\tR\bsenderId\x12*\n" +
-	"\x11sender_account_id\x18\x03 \x01(\tR\x0fsenderAccountId\x12\x1f\n" +
-	"\vreceiver_id\x18\x04 \x01(\tR\n" +
+	"\x11sender_account_id\x18\x03 \x01(\tR\x0fsenderAccountId\x122\n" +
+	"\x15sender_account_number\x18\x04 \x01(\tR\x13senderAccountNumber\x12\x1f\n" +
+	"\vreceiver_id\x18\x05 \x01(\tR\n" +
 	"receiverId\x12.\n" +
-	"\x13receiver_account_id\x18\x05 \x01(\tR\x11receiverAccountId\x12\x16\n" +
-	"\x06amount\x18\x06 \x01(\x01R\x06amount\x12\x1a\n" +
-	"\bcurrency\x18\a \x01(\tR\bcurrency\x126\n" +
-	"\x06status\x18\b \x01(\x0e2\x1e.transaction.TransactionStatusR\x06status\x12\x12\n" +
-	"\x04note\x18\t \x01(\tR\x04note\x12!\n" +
-	"\fpayment_code\x18\n" +
-	" \x01(\tR\vpaymentCode\x12\x14\n" +
-	"\x05model\x18\v \x01(\tR\x05model\x12\x1f\n" +
-	"\vcall_number\x18\f \x01(\tR\n" +
+	"\x13receiver_account_id\x18\x06 \x01(\tR\x11receiverAccountId\x126\n" +
+	"\x17receiver_account_number\x18\a \x01(\tR\x15receiverAccountNumber\x12\x16\n" +
+	"\x06amount\x18\b \x01(\x01R\x06amount\x12\x1a\n" +
+	"\bcurrency\x18\t \x01(\tR\bcurrency\x126\n" +
+	"\x06status\x18\n" +
+	" \x01(\x0e2\x1e.transaction.TransactionStatusR\x06status\x12\x12\n" +
+	"\x04note\x18\v \x01(\tR\x04note\x12!\n" +
+	"\fpayment_code\x18\f \x01(\tR\vpaymentCode\x12\x14\n" +
+	"\x05model\x18\r \x01(\tR\x05model\x12\x1f\n" +
+	"\vcall_number\x18\x0e \x01(\tR\n" +
 	"callNumber\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\r \x01(\tR\tcreatedAt\"\xd6\x02\n" +
-	"\x18CreateTransactionRequest\x12\x1b\n" +
-	"\tsender_id\x18\x01 \x01(\tR\bsenderId\x12*\n" +
-	"\x11sender_account_id\x18\x02 \x01(\tR\x0fsenderAccountId\x12\x1f\n" +
-	"\vreceiver_id\x18\x03 \x01(\tR\n" +
-	"receiverId\x12.\n" +
-	"\x13receiver_account_id\x18\x04 \x01(\tR\x11receiverAccountId\x12\x16\n" +
-	"\x06amount\x18\x05 \x01(\x01R\x06amount\x12\x1a\n" +
-	"\bcurrency\x18\x06 \x01(\tR\bcurrency\x12\x12\n" +
-	"\x04note\x18\a \x01(\tR\x04note\x12!\n" +
-	"\fpayment_code\x18\b \x01(\tR\vpaymentCode\x12\x14\n" +
-	"\x05model\x18\t \x01(\tR\x05model\x12\x1f\n" +
-	"\vcall_number\x18\n" +
-	" \x01(\tR\n" +
+	"created_at\x18\x0f \x01(\tR\tcreatedAt\"\xa8\x02\n" +
+	"\x18CreateTransactionRequest\x122\n" +
+	"\x15sender_account_number\x18\x01 \x01(\tR\x13senderAccountNumber\x126\n" +
+	"\x17receiver_account_number\x18\x02 \x01(\tR\x15receiverAccountNumber\x12\x16\n" +
+	"\x06amount\x18\x03 \x01(\x01R\x06amount\x12\x1a\n" +
+	"\bcurrency\x18\x04 \x01(\tR\bcurrency\x12\x12\n" +
+	"\x04note\x18\x05 \x01(\tR\x04note\x12!\n" +
+	"\fpayment_code\x18\x06 \x01(\tR\vpaymentCode\x12\x14\n" +
+	"\x05model\x18\a \x01(\tR\x05model\x12\x1f\n" +
+	"\vcall_number\x18\b \x01(\tR\n" +
 	"callNumber\"W\n" +
 	"\x19CreateTransactionResponse\x12:\n" +
 	"\vtransaction\x18\x01 \x01(\v2\x18.transaction.TransactionR\vtransaction\"7\n" +
