@@ -2,8 +2,15 @@ syntax = "proto3";
 
 package transaction;
 
+// TransactionService handles all transaction-related operations
 service TransactionService {
+  // CreateTransaction creates a new transfer between two accounts
   rpc CreateTransaction (CreateTransactionRequest) returns (CreateTransactionResponse);
+  // Deposit funds into an account
+  rpc Deposit (DepositRequest) returns (DepositResponse);
+  // Withdraw funds from an account
+  rpc Withdraw (WithdrawRequest) returns (WithdrawResponse);
+  // GetTransactionsByUser retrieves all transactions for a user (as sender or receiver)
   rpc GetTransactionsByUser (GetTransactionsByUserRequest) returns (GetTransactionsByUserResponse);
 }
 
@@ -11,6 +18,12 @@ enum TransactionStatus {
   APPROVED = 0;
   PENDING = 1;
   DECLINED = 2;
+}
+
+enum TransactionType {
+  TRANSFER = 0;
+  DEPOSIT = 1;
+  WITHDRAW = 2;
 }
 
 message Transaction {
@@ -28,7 +41,8 @@ message Transaction {
   string payment_code = 12;
   string model = 13;
   string call_number = 14;
-  string created_at = 15; 
+  string created_at = 15;
+  TransactionType type = 16;
 }
 
 message CreateTransactionRequest {
@@ -43,6 +57,28 @@ message CreateTransactionRequest {
 }
 
 message CreateTransactionResponse {
+  Transaction transaction = 1;
+}
+
+message DepositRequest {
+  string account_number = 1;
+  double amount = 2;
+  string currency = 3;
+  string note = 4;
+}
+
+message DepositResponse {
+  Transaction transaction = 1;
+}
+
+message WithdrawRequest {
+  string account_number = 1;
+  double amount = 2;
+  string currency = 3;
+  string note = 4;
+}
+
+message WithdrawResponse {
   Transaction transaction = 1;
 }
 

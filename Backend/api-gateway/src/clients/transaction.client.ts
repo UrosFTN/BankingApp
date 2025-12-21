@@ -39,6 +39,14 @@ class TransactionGrpcClient {
     return this.call("CreateTransaction", data);
   }
 
+  deposit(data: any) {
+    return this.call("Deposit", data);
+  }
+
+  withdraw(data: any) {
+    return this.call("Withdraw", data);
+  }
+
   getTransactionsByUser(data: any) {
     return this.call("GetTransactionsByUser", data);
   }

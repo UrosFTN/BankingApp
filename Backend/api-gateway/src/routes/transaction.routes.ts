@@ -21,7 +21,7 @@ const transactionRoutes: FastifyPluginAsync = async (
     (request as any).user = { id: validation.user_id };
   });
 
-  // Create transaction using account numbers
+  // Create transaction using account numbers (transfer)
   fastify.post("/", async (request, reply) => {
     const body = request.body as any;
     const payload = {
@@ -35,6 +35,32 @@ const transactionRoutes: FastifyPluginAsync = async (
       note: body.note,
     };
     const res = await transactionClient.createTransaction(payload);
+    return res;
+  });
+
+  // Deposit into authenticated user's account
+  fastify.post("/deposit", async (request, reply) => {
+    const body = request.body as any;
+    const payload = {
+      account_number: body.account_number,
+      amount: body.amount,
+      currency: body.currency,
+      note: body.note,
+    };
+    const res = await transactionClient.deposit(payload);
+    return res;
+  });
+
+  // Withdraw from authenticated user's account
+  fastify.post("/withdraw", async (request, reply) => {
+    const body = request.body as any;
+    const payload = {
+      account_number: body.account_number,
+      amount: body.amount,
+      currency: body.currency,
+      note: body.note,
+    };
+    const res = await transactionClient.withdraw(payload);
     return res;
   });
 
