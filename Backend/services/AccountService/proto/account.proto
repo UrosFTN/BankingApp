@@ -20,6 +20,8 @@ service AccountService {
   rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse);
   // UpdateBalance updates the balance of an account
   rpc UpdateBalance(UpdateBalanceRequest) returns (UpdateBalanceResponse);
+  // GetAccountByNumber retrieves an account by account number
+  rpc GetAccountByNumber(GetAccountByNumberRequest) returns (GetAccountByNumberResponse);
 }
 
 enum AccountType {
@@ -127,4 +129,14 @@ message UpdateBalanceResponse {
   bool success = 1;
   string message = 2;
   double new_balance = 3;
+}
+
+message GetAccountByNumberRequest {
+  string account_number = 1;
+}
+
+message GetAccountByNumberResponse {
+  bool success = 1;
+  string message = 2;
+  Account account = 3;
 }

@@ -19,26 +19,38 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AccountService_CreateAccount_FullMethodName     = "/account.AccountService/CreateAccount"
-	AccountService_GetAccount_FullMethodName        = "/account.AccountService/GetAccount"
-	AccountService_GetAccountsByUser_FullMethodName = "/account.AccountService/GetAccountsByUser"
-	AccountService_UpdateAccount_FullMethodName     = "/account.AccountService/UpdateAccount"
-	AccountService_DeleteAccount_FullMethodName     = "/account.AccountService/DeleteAccount"
-	AccountService_GetBalance_FullMethodName        = "/account.AccountService/GetBalance"
-	AccountService_UpdateBalance_FullMethodName     = "/account.AccountService/UpdateBalance"
+	AccountService_CreateAccount_FullMethodName      = "/account.AccountService/CreateAccount"
+	AccountService_GetAccount_FullMethodName         = "/account.AccountService/GetAccount"
+	AccountService_GetAccountsByUser_FullMethodName  = "/account.AccountService/GetAccountsByUser"
+	AccountService_UpdateAccount_FullMethodName      = "/account.AccountService/UpdateAccount"
+	AccountService_DeleteAccount_FullMethodName      = "/account.AccountService/DeleteAccount"
+	AccountService_GetBalance_FullMethodName         = "/account.AccountService/GetBalance"
+	AccountService_UpdateBalance_FullMethodName      = "/account.AccountService/UpdateBalance"
+	AccountService_GetAccountByNumber_FullMethodName = "/account.AccountService/GetAccountByNumber"
 )
 
 // AccountServiceClient is the client API for AccountService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// AccountService manages user bank accounts and balances
 type AccountServiceClient interface {
+	// CreateAccount creates a new bank account for a user
 	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountResponse, error)
+	// GetAccount retrieves a specific account by ID
 	GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*GetAccountResponse, error)
+	// GetAccountsByUser retrieves all accounts belonging to a user
 	GetAccountsByUser(ctx context.Context, in *GetAccountsByUserRequest, opts ...grpc.CallOption) (*GetAccountsByUserResponse, error)
+	// UpdateAccount updates account details
 	UpdateAccount(ctx context.Context, in *UpdateAccountRequest, opts ...grpc.CallOption) (*UpdateAccountResponse, error)
+	// DeleteAccount deletes an account
 	DeleteAccount(ctx context.Context, in *DeleteAccountRequest, opts ...grpc.CallOption) (*DeleteAccountResponse, error)
+	// GetBalance retrieves the current balance of an account
 	GetBalance(ctx context.Context, in *GetBalanceRequest, opts ...grpc.CallOption) (*GetBalanceResponse, error)
+	// UpdateBalance updates the balance of an account
 	UpdateBalance(ctx context.Context, in *UpdateBalanceRequest, opts ...grpc.CallOption) (*UpdateBalanceResponse, error)
+	// GetAccountByNumber retrieves an account by account number
+	GetAccountByNumber(ctx context.Context, in *GetAccountByNumberRequest, opts ...grpc.CallOption) (*GetAccountByNumberResponse, error)
 }
 
 type accountServiceClient struct {
@@ -119,17 +131,38 @@ func (c *accountServiceClient) UpdateBalance(ctx context.Context, in *UpdateBala
 	return out, nil
 }
 
+func (c *accountServiceClient) GetAccountByNumber(ctx context.Context, in *GetAccountByNumberRequest, opts ...grpc.CallOption) (*GetAccountByNumberResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAccountByNumberResponse)
+	err := c.cc.Invoke(ctx, AccountService_GetAccountByNumber_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountServiceServer is the server API for AccountService service.
 // All implementations must embed UnimplementedAccountServiceServer
 // for forward compatibility.
+//
+// AccountService manages user bank accounts and balances
 type AccountServiceServer interface {
+	// CreateAccount creates a new bank account for a user
 	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountResponse, error)
+	// GetAccount retrieves a specific account by ID
 	GetAccount(context.Context, *GetAccountRequest) (*GetAccountResponse, error)
+	// GetAccountsByUser retrieves all accounts belonging to a user
 	GetAccountsByUser(context.Context, *GetAccountsByUserRequest) (*GetAccountsByUserResponse, error)
+	// UpdateAccount updates account details
 	UpdateAccount(context.Context, *UpdateAccountRequest) (*UpdateAccountResponse, error)
+	// DeleteAccount deletes an account
 	DeleteAccount(context.Context, *DeleteAccountRequest) (*DeleteAccountResponse, error)
+	// GetBalance retrieves the current balance of an account
 	GetBalance(context.Context, *GetBalanceRequest) (*GetBalanceResponse, error)
+	// UpdateBalance updates the balance of an account
 	UpdateBalance(context.Context, *UpdateBalanceRequest) (*UpdateBalanceResponse, error)
+	// GetAccountByNumber retrieves an account by account number
+	GetAccountByNumber(context.Context, *GetAccountByNumberRequest) (*GetAccountByNumberResponse, error)
 	mustEmbedUnimplementedAccountServiceServer()
 }
 
@@ -160,6 +193,9 @@ func (UnimplementedAccountServiceServer) GetBalance(context.Context, *GetBalance
 }
 func (UnimplementedAccountServiceServer) UpdateBalance(context.Context, *UpdateBalanceRequest) (*UpdateBalanceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateBalance not implemented")
+}
+func (UnimplementedAccountServiceServer) GetAccountByNumber(context.Context, *GetAccountByNumberRequest) (*GetAccountByNumberResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAccountByNumber not implemented")
 }
 func (UnimplementedAccountServiceServer) mustEmbedUnimplementedAccountServiceServer() {}
 func (UnimplementedAccountServiceServer) testEmbeddedByValue()                        {}
@@ -308,6 +344,24 @@ func _AccountService_UpdateBalance_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccountService_GetAccountByNumber_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAccountByNumberRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).GetAccountByNumber(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_GetAccountByNumber_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).GetAccountByNumber(ctx, req.(*GetAccountByNumberRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AccountService_ServiceDesc is the grpc.ServiceDesc for AccountService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -342,6 +396,10 @@ var AccountService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateBalance",
 			Handler:    _AccountService_UpdateBalance_Handler,
+		},
+		{
+			MethodName: "GetAccountByNumber",
+			Handler:    _AccountService_GetAccountByNumber_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

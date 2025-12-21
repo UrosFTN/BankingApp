@@ -350,6 +350,48 @@ func (s *AccountService) UpdateBalance(ctx context.Context, req *proto.UpdateBal
     }, nil
 }
 
+func (s *AccountService) GetAccountByNumber(ctx context.Context, req *proto.GetAccountByNumberRequest) (*proto.GetAccountByNumberResponse, error) {
+    logrus.WithFields(logrus.Fields{
+        "account_number": req.AccountNumber,
+    }).Info("Fetching account by account number")
+
+    if req.AccountNumber == "" {
+        return &proto.GetAccountByNumberResponse{
+            Success: false,
+            Message: "Account number is required",
+        }, status.Error(codes.InvalidArgument, "Account number is required")
+    }
+
+    var account models.Account
+
+    if err := s.db.Where("account_number = ?", req.AccountNumber).First(&account).Error; err != nil {
+        if errors.Is(err, gorm.ErrRecordNotFound) {
+            logrus.WithField("account_number", req.AccountNumber).Warn("Account not found")
+            return &proto.GetAccountByNumberResponse{
+                Success: false,
+                Message: "Account not found",
+            }, status.Error(codes.NotFound, "Account not found")
+        }
+        logrus.WithError(err).Error("Failed to fetch account")
+        return &proto.GetAccountByNumberResponse{
+            Success: false,
+            Message: "Failed to fetch account",
+        }, status.Error(codes.Internal, "Failed to fetch account")
+    }
+
+    logrus.WithFields(logrus.Fields{
+        "account_id":     account.ID.String(),
+        "account_number": account.AccountNumber,
+        "user_id":        account.UserID.String(),
+    }).Info("Account retrieved successfully")
+
+    return &proto.GetAccountByNumberResponse{
+        Success: true,
+        Message: "Account retrieved successfully",
+        Account: s.accountToProto(&account),
+    }, nil
+}
+
 func (s *AccountService) accountToProto(account *models.Account) *proto.Account {
     return &proto.Account{
         Id:                account.ID.String(),
