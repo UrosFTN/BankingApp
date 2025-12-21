@@ -3,6 +3,8 @@ import {
   transactionApi,
   Transaction,
   CreateTransactionRequest,
+  DepositRequest,
+  WithdrawRequest,
 } from "../services/api/transaction.api";
 
 interface TransactionState {
@@ -13,6 +15,8 @@ interface TransactionState {
   createTransaction: (
     payload: CreateTransactionRequest,
   ) => Promise<Transaction>;
+  deposit: (payload: DepositRequest) => Promise<Transaction>;
+  withdraw: (payload: WithdrawRequest) => Promise<Transaction>;
   clearError: () => void;
 }
 
@@ -39,6 +43,38 @@ export const useTransactionStore = create<TransactionState>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const txn = await transactionApi.createTransaction(payload);
+      set((state) => ({
+        transactions: [txn, ...state.transactions],
+        isLoading: false,
+      }));
+      return txn;
+    } catch (error: any) {
+      const message = getErrorMessage(error);
+      set({ error: message, isLoading: false });
+      throw new Error(message);
+    }
+  },
+
+  deposit: async (payload: DepositRequest) => {
+    set({ isLoading: true, error: null });
+    try {
+      const txn = await transactionApi.deposit(payload);
+      set((state) => ({
+        transactions: [txn, ...state.transactions],
+        isLoading: false,
+      }));
+      return txn;
+    } catch (error: any) {
+      const message = getErrorMessage(error);
+      set({ error: message, isLoading: false });
+      throw new Error(message);
+    }
+  },
+
+  withdraw: async (payload: WithdrawRequest) => {
+    set({ isLoading: true, error: null });
+    try {
+      const txn = await transactionApi.withdraw(payload);
       set((state) => ({
         transactions: [txn, ...state.transactions],
         isLoading: false,

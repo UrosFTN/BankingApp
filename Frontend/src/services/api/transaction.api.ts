@@ -32,6 +32,20 @@ export interface CreateTransactionRequest {
   call_number?: string;
 }
 
+export interface DepositRequest {
+  account_number: string;
+  amount: number;
+  currency: string;
+  note?: string;
+}
+
+export interface WithdrawRequest {
+  account_number: string;
+  amount: number;
+  currency: string;
+  note?: string;
+}
+
 const basePath = "/api/transactions";
 
 // Helper to normalize response shape (camelCase or snake_case)
@@ -62,6 +76,18 @@ export const transactionApi = {
     payload: CreateTransactionRequest,
   ): Promise<Transaction> => {
     const res = await client.post(basePath, payload);
+    const data = res.data.transaction ?? res.data;
+    return normalizeTransaction(data);
+  },
+
+  deposit: async (payload: DepositRequest): Promise<Transaction> => {
+    const res = await client.post(`${basePath}/deposit`, payload);
+    const data = res.data.transaction ?? res.data;
+    return normalizeTransaction(data);
+  },
+
+  withdraw: async (payload: WithdrawRequest): Promise<Transaction> => {
+    const res = await client.post(`${basePath}/withdraw`, payload);
     const data = res.data.transaction ?? res.data;
     return normalizeTransaction(data);
   },

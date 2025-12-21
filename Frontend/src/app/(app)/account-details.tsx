@@ -6,16 +6,23 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { colors } from "@styles/colors";
 import { useAccountStore } from "../../store/accountStore";
+import { useAuthStore } from "../../store/authStore";
+import { useTransactionStore } from "../../store/transactionStore";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 const AccountDetailsScreen = () => {
   const router = useRouter();
   const { selectedAccount } = useAccountStore();
+  const { user } = useAuthStore();
+  const { deposit, withdraw, isLoading, error, clearError } =
+    useTransactionStore();
   const [modalVisible, setModalVisible] = useState(false);
   const [transactionType, setTransactionType] = useState<
     "deposit" | "withdraw"
@@ -44,18 +51,49 @@ const AccountDetailsScreen = () => {
   const handleOpenModal = (type: "deposit" | "withdraw") => {
     setTransactionType(type);
     setAmount("");
+    clearError();
     setModalVisible(true);
   };
 
   const handleCloseModal = () => {
     setModalVisible(false);
     setAmount("");
+    clearError();
   };
 
-  const handleConfirm = () => {
-    // TODO: Implement transaction logic
-    console.log(`${transactionType} amount: ${amount}`);
-    handleCloseModal();
+  const handleConfirm = async () => {
+    if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+      Alert.alert("Invalid Amount", "Please enter a valid positive amount");
+      return;
+    }
+
+    try {
+      const payload = {
+        account_number: selectedAccount.account_number,
+        amount: parseFloat(amount),
+        currency: selectedAccount.currency,
+        note: `${capitalize(transactionType)} via mobile app`,
+      };
+
+      if (transactionType === "deposit") {
+        await deposit(payload);
+      } else {
+        await withdraw(payload);
+      }
+
+      Alert.alert(
+        "Success",
+        `${capitalize(transactionType)} of ${
+          selectedAccount.currency
+        } ${amount} completed successfully`,
+      );
+      handleCloseModal();
+    } catch (err: any) {
+      Alert.alert(
+        "Transaction Failed",
+        error || "An error occurred during the transaction",
+      );
+    }
   };
 
   return (
@@ -181,23 +219,34 @@ const AccountDetailsScreen = () => {
               keyboardType="decimal-pad"
               value={amount}
               onChangeText={setAmount}
+              editable={!isLoading}
             />
 
             <View style={styles.modalButtonContainer}>
               <TouchableOpacity
                 style={[styles.modalButton, styles.cancelButton]}
                 onPress={handleCloseModal}
+                disabled={isLoading}
               >
                 <Text style={styles.cancelButtonText}>Cancel</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[styles.modalButton, styles.confirmButton]}
+                style={[
+                  styles.modalButton,
+                  styles.confirmButton,
+                  isLoading && styles.confirmButtonDisabled,
+                ]}
                 onPress={handleConfirm}
+                disabled={isLoading}
               >
-                <Text style={styles.confirmButtonText}>
-                  {capitalize(transactionType)}
-                </Text>
+                {isLoading ? (
+                  <ActivityIndicator color={colors.background} size="small" />
+                ) : (
+                  <Text style={styles.confirmButtonText}>
+                    {capitalize(transactionType)}
+                  </Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -342,6 +391,9 @@ const styles = StyleSheet.create({
   },
   confirmButton: {
     backgroundColor: colors.lime,
+  },
+  confirmButtonDisabled: {
+    opacity: 0.6,
   },
   cancelButtonText: {
     color: colors.white,
