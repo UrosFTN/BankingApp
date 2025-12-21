@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Alert,
   ScrollView,
@@ -15,11 +15,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAccountStore } from "../../store/accountStore";
 import { useTransactionStore } from "../../store/transactionStore";
 
+const CURRENCIES = ["RSD", "EUR", "USD", "GBP"];
+
 const NewPaymentScreen = () => {
   const router = useRouter();
   const params = useLocalSearchParams();
   const { selectedAccount, setSelectedAccount } = useAccountStore();
   const { createTransaction } = useTransactionStore();
+  const initializedRef = useRef(false);
 
   useEffect(() => {
     // Reset selected account when entering this screen
@@ -31,14 +34,14 @@ const NewPaymentScreen = () => {
   const [model, setModel] = useState("");
   const [callNumber, setCallNumber] = useState("");
   const [amount, setAmount] = useState("");
-  const [currency, setCurrency] = useState("RSD");
+  const [currency, setCurrency] = useState(CURRENCIES[0]); // Always start with "RSD"
   const [paymentCode, setPaymentCode] = useState("");
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // Pre-fill form if coming from QR scanner
+  // Pre-fill form if coming from QR scanner (only once on mount)
   useEffect(() => {
-    if (params.fromQR === "true") {
+    if (!initializedRef.current && params.fromQR === "true") {
       if (params.recipientName) setRecipientName(String(params.recipientName));
       if (params.recipientAccount)
         setRecipientAccount(String(params.recipientAccount));
@@ -48,12 +51,25 @@ const NewPaymentScreen = () => {
       if (params.paymentCode) setPaymentCode(String(params.paymentCode));
       if (params.callNumber) setCallNumber(String(params.callNumber));
       if (params.note) setNote(String(params.note));
+      initializedRef.current = true;
     }
-  }, [params]);
+  }, []);
 
   const handleSubmit = async () => {
     if (!selectedAccount) {
       Alert.alert("Select account", "Please choose an account to pay from.");
+      return;
+    }
+
+    if (selectedAccount.currency !== currency) {
+      Alert.alert(
+        "Currency mismatch",
+        `Your account currency is ${
+          selectedAccount.currency
+        }, but payment currency is ${
+          CURRENCIES[parseInt(currency) - 1]
+        }. Please match the currencies.`,
+      );
       return;
     }
 
@@ -212,9 +228,7 @@ const NewPaymentScreen = () => {
             <View style={styles.pickerContainer}>
               <Picker
                 selectedValue={currency}
-                onValueChange={(val) =>
-                  setCurrency((val as string).toUpperCase())
-                }
+                onValueChange={(val) => setCurrency(String(val))}
                 style={styles.picker}
                 dropdownIconColor={colors.lime}
               >
