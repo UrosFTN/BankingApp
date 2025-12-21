@@ -27,7 +27,11 @@ export default function AppLayout() {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>BankingApp</Text>
         <View style={styles.headerButtons}>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity
+            onPress={() => {
+              router.navigate("/settings");
+            }}
+          >
             <Ionicons name="settings-outline" size={24} color={colors.lime} />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleLogout}>

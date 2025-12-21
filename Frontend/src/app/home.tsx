@@ -1,11 +1,23 @@
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
+import { useAuthStore } from "../store/authStore";
 
 import { colors } from "../styles/colors";
 
 const Home = () => {
   const router = useRouter();
+
+  const { fingerprintLogin } = useAuthStore();
+
+  async function handleLoginPress() {
+    const success = await fingerprintLogin();
+    if (success) {
+      router.replace("/accounts");
+    } else {
+      router.push("/login");
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -22,7 +34,7 @@ const Home = () => {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => router.push("/login")}
+        onPress={handleLoginPress}
         accessibilityRole="button"
       >
         <Text style={styles.buttonText}>Login</Text>
