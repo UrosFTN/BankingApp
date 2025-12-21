@@ -97,7 +97,7 @@ export default function RegistrationScreen() {
         style={styles.cancelButton}
         onPress={() => router.back()}
       >
-        <Text style={styles.cancelButtonText}>Back to Login</Text>
+        <Text style={styles.cancelButtonText}>Back to Home</Text>
       </TouchableOpacity>
     </View>
   );
@@ -158,6 +158,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: colors.lime,
+    width: "80%",
+    marginTop: 4,
   },
   cancelButtonText: {
     color: colors.lime,

@@ -38,10 +38,6 @@ export default function LoginScreen() {
     }
   }
 
-  async function handleCreateAccount() {
-    router.push("/register");
-  }
-
   return (
     <View style={styles.container}>
       <Image
@@ -80,10 +76,6 @@ export default function LoginScreen() {
         <Text style={styles.buttonText}>
           {isLoading ? "Logging in..." : "Login"}
         </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.button} onPress={handleCreateAccount}>
-        <Text style={styles.buttonText}>Create Account</Text>
       </TouchableOpacity>
 
       {localError ? <Text style={styles.message}>{localError}</Text> : null}
