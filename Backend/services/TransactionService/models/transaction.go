@@ -8,26 +8,35 @@ import (
 
 type TransactionStatus string
 
+type TransactionType string
+
 const (
 	StatusApproved TransactionStatus = "approved"
-	StatusPending TransactionStatus = "pending"
+	StatusPending  TransactionStatus = "pending"
 	StatusDeclined TransactionStatus = "declined"
 )
 
+const (
+	TypeTransfer TransactionType = "transfer"
+	TypeDeposit  TransactionType = "deposit"
+	TypeWithdraw TransactionType = "withdraw"
+)
+
 type Transaction struct {
-	ID uuid.UUID `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id"`
-	SenderID uuid.UUID `gorm:"type:uuid;index;not null" json:"sender_id"`
-	SenderAccountID uuid.UUID `gorm:"type:uuid;index;not null" json:"sender_account_id"`
-	SenderAccountNumber string `gorm:"type:varchar(50);not null" json:"sender_account_number"`
-	ReceiverID uuid.UUID `gorm:"type:uuid;index;not null" json:"receiver_id"`
-	ReceiverAccountID uuid.UUID `gorm:"type:uuid;index;not null" json:"receiver_account_id"`
-	ReceiverAccountNumber string `gorm:"type:varchar(50);not null" json:"receiver_account_number"`
-	TransactionStatus TransactionStatus `gorm:"type:varchar(50);not null;default:'pending'" json:"status"`
-	CreatedAt time.Time `json:"created_at"`
-	Amount float64 `gorm:"type:decimal(15,2);not null;default:0" json:"amount"`
-	Currency          string         `gorm:"type:varchar(3);not null;default:'USD'" json:"currency"`
-	Note string `gorm:"type:varchar(100);not null;default:''" json:"note"`
-	PaymentCode string `gorm:"type:varchar(3);not null;default:''" json:"payment_code"`
-	Model string `gorm:"type:varchar(2);not null;default:''" json:"model"`
-	CallNumber string `gorm:"type:varchar(30);not null;default:''" json:"call_number"`
+	ID                    uuid.UUID         `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id"`
+	SenderID              uuid.UUID         `gorm:"type:uuid;index;not null" json:"sender_id"`
+	SenderAccountID       uuid.UUID         `gorm:"type:uuid;index;not null" json:"sender_account_id"`
+	SenderAccountNumber   string            `gorm:"type:varchar(50);not null" json:"sender_account_number"`
+	ReceiverID            uuid.UUID         `gorm:"type:uuid;index;not null" json:"receiver_id"`
+	ReceiverAccountID     uuid.UUID         `gorm:"type:uuid;index;not null" json:"receiver_account_id"`
+	ReceiverAccountNumber string            `gorm:"type:varchar(50);not null" json:"receiver_account_number"`
+	TransactionStatus     TransactionStatus `gorm:"type:varchar(50);not null;default:'pending'" json:"status"`
+	Type                  TransactionType   `gorm:"type:varchar(50);not null;default:'transfer'" json:"type"`
+	CreatedAt             time.Time         `json:"created_at"`
+	Amount                float64           `gorm:"type:decimal(15,2);not null;default:0" json:"amount"`
+	Currency              string            `gorm:"type:varchar(3);not null;default:'USD'" json:"currency"`
+	Note                  string            `gorm:"type:varchar(100);not null;default:''" json:"note"`
+	PaymentCode           string            `gorm:"type:varchar(3);not null;default:''" json:"payment_code"`
+	Model                 string            `gorm:"type:varchar(2);not null;default:''" json:"model"`
+	CallNumber            string            `gorm:"type:varchar(30);not null;default:''" json:"call_number"`
 }

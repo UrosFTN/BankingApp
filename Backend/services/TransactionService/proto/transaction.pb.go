@@ -70,6 +70,55 @@ func (TransactionStatus) EnumDescriptor() ([]byte, []int) {
 	return file_proto_transaction_proto_rawDescGZIP(), []int{0}
 }
 
+type TransactionType int32
+
+const (
+	TransactionType_TRANSFER TransactionType = 0
+	TransactionType_DEPOSIT  TransactionType = 1
+	TransactionType_WITHDRAW TransactionType = 2
+)
+
+// Enum value maps for TransactionType.
+var (
+	TransactionType_name = map[int32]string{
+		0: "TRANSFER",
+		1: "DEPOSIT",
+		2: "WITHDRAW",
+	}
+	TransactionType_value = map[string]int32{
+		"TRANSFER": 0,
+		"DEPOSIT":  1,
+		"WITHDRAW": 2,
+	}
+)
+
+func (x TransactionType) Enum() *TransactionType {
+	p := new(TransactionType)
+	*p = x
+	return p
+}
+
+func (x TransactionType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (TransactionType) Descriptor() protoreflect.EnumDescriptor {
+	return file_proto_transaction_proto_enumTypes[1].Descriptor()
+}
+
+func (TransactionType) Type() protoreflect.EnumType {
+	return &file_proto_transaction_proto_enumTypes[1]
+}
+
+func (x TransactionType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use TransactionType.Descriptor instead.
+func (TransactionType) EnumDescriptor() ([]byte, []int) {
+	return file_proto_transaction_proto_rawDescGZIP(), []int{1}
+}
+
 type Transaction struct {
 	state                 protoimpl.MessageState `protogen:"open.v1"`
 	Id                    string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -87,6 +136,7 @@ type Transaction struct {
 	Model                 string                 `protobuf:"bytes,13,opt,name=model,proto3" json:"model,omitempty"`
 	CallNumber            string                 `protobuf:"bytes,14,opt,name=call_number,json=callNumber,proto3" json:"call_number,omitempty"`
 	CreatedAt             string                 `protobuf:"bytes,15,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	Type                  TransactionType        `protobuf:"varint,16,opt,name=type,proto3,enum=transaction.TransactionType" json:"type,omitempty"`
 	unknownFields         protoimpl.UnknownFields
 	sizeCache             protoimpl.SizeCache
 }
@@ -224,6 +274,13 @@ func (x *Transaction) GetCreatedAt() string {
 		return x.CreatedAt
 	}
 	return ""
+}
+
+func (x *Transaction) GetType() TransactionType {
+	if x != nil {
+		return x.Type
+	}
+	return TransactionType_TRANSFER
 }
 
 type CreateTransactionRequest struct {
@@ -370,6 +427,230 @@ func (x *CreateTransactionResponse) GetTransaction() *Transaction {
 	return nil
 }
 
+type DepositRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AccountNumber string                 `protobuf:"bytes,1,opt,name=account_number,json=accountNumber,proto3" json:"account_number,omitempty"`
+	Amount        float64                `protobuf:"fixed64,2,opt,name=amount,proto3" json:"amount,omitempty"`
+	Currency      string                 `protobuf:"bytes,3,opt,name=currency,proto3" json:"currency,omitempty"`
+	Note          string                 `protobuf:"bytes,4,opt,name=note,proto3" json:"note,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DepositRequest) Reset() {
+	*x = DepositRequest{}
+	mi := &file_proto_transaction_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DepositRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DepositRequest) ProtoMessage() {}
+
+func (x *DepositRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_transaction_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DepositRequest.ProtoReflect.Descriptor instead.
+func (*DepositRequest) Descriptor() ([]byte, []int) {
+	return file_proto_transaction_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *DepositRequest) GetAccountNumber() string {
+	if x != nil {
+		return x.AccountNumber
+	}
+	return ""
+}
+
+func (x *DepositRequest) GetAmount() float64 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+func (x *DepositRequest) GetCurrency() string {
+	if x != nil {
+		return x.Currency
+	}
+	return ""
+}
+
+func (x *DepositRequest) GetNote() string {
+	if x != nil {
+		return x.Note
+	}
+	return ""
+}
+
+type DepositResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Transaction   *Transaction           `protobuf:"bytes,1,opt,name=transaction,proto3" json:"transaction,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DepositResponse) Reset() {
+	*x = DepositResponse{}
+	mi := &file_proto_transaction_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DepositResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DepositResponse) ProtoMessage() {}
+
+func (x *DepositResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_transaction_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DepositResponse.ProtoReflect.Descriptor instead.
+func (*DepositResponse) Descriptor() ([]byte, []int) {
+	return file_proto_transaction_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *DepositResponse) GetTransaction() *Transaction {
+	if x != nil {
+		return x.Transaction
+	}
+	return nil
+}
+
+type WithdrawRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AccountNumber string                 `protobuf:"bytes,1,opt,name=account_number,json=accountNumber,proto3" json:"account_number,omitempty"`
+	Amount        float64                `protobuf:"fixed64,2,opt,name=amount,proto3" json:"amount,omitempty"`
+	Currency      string                 `protobuf:"bytes,3,opt,name=currency,proto3" json:"currency,omitempty"`
+	Note          string                 `protobuf:"bytes,4,opt,name=note,proto3" json:"note,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WithdrawRequest) Reset() {
+	*x = WithdrawRequest{}
+	mi := &file_proto_transaction_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WithdrawRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WithdrawRequest) ProtoMessage() {}
+
+func (x *WithdrawRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_transaction_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WithdrawRequest.ProtoReflect.Descriptor instead.
+func (*WithdrawRequest) Descriptor() ([]byte, []int) {
+	return file_proto_transaction_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *WithdrawRequest) GetAccountNumber() string {
+	if x != nil {
+		return x.AccountNumber
+	}
+	return ""
+}
+
+func (x *WithdrawRequest) GetAmount() float64 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+func (x *WithdrawRequest) GetCurrency() string {
+	if x != nil {
+		return x.Currency
+	}
+	return ""
+}
+
+func (x *WithdrawRequest) GetNote() string {
+	if x != nil {
+		return x.Note
+	}
+	return ""
+}
+
+type WithdrawResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Transaction   *Transaction           `protobuf:"bytes,1,opt,name=transaction,proto3" json:"transaction,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WithdrawResponse) Reset() {
+	*x = WithdrawResponse{}
+	mi := &file_proto_transaction_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WithdrawResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WithdrawResponse) ProtoMessage() {}
+
+func (x *WithdrawResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_transaction_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WithdrawResponse.ProtoReflect.Descriptor instead.
+func (*WithdrawResponse) Descriptor() ([]byte, []int) {
+	return file_proto_transaction_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *WithdrawResponse) GetTransaction() *Transaction {
+	if x != nil {
+		return x.Transaction
+	}
+	return nil
+}
+
 type GetTransactionsByUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
@@ -379,7 +660,7 @@ type GetTransactionsByUserRequest struct {
 
 func (x *GetTransactionsByUserRequest) Reset() {
 	*x = GetTransactionsByUserRequest{}
-	mi := &file_proto_transaction_proto_msgTypes[3]
+	mi := &file_proto_transaction_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -391,7 +672,7 @@ func (x *GetTransactionsByUserRequest) String() string {
 func (*GetTransactionsByUserRequest) ProtoMessage() {}
 
 func (x *GetTransactionsByUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_transaction_proto_msgTypes[3]
+	mi := &file_proto_transaction_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -404,7 +685,7 @@ func (x *GetTransactionsByUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTransactionsByUserRequest.ProtoReflect.Descriptor instead.
 func (*GetTransactionsByUserRequest) Descriptor() ([]byte, []int) {
-	return file_proto_transaction_proto_rawDescGZIP(), []int{3}
+	return file_proto_transaction_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GetTransactionsByUserRequest) GetUserId() string {
@@ -423,7 +704,7 @@ type GetTransactionsByUserResponse struct {
 
 func (x *GetTransactionsByUserResponse) Reset() {
 	*x = GetTransactionsByUserResponse{}
-	mi := &file_proto_transaction_proto_msgTypes[4]
+	mi := &file_proto_transaction_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -435,7 +716,7 @@ func (x *GetTransactionsByUserResponse) String() string {
 func (*GetTransactionsByUserResponse) ProtoMessage() {}
 
 func (x *GetTransactionsByUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_transaction_proto_msgTypes[4]
+	mi := &file_proto_transaction_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -448,7 +729,7 @@ func (x *GetTransactionsByUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTransactionsByUserResponse.ProtoReflect.Descriptor instead.
 func (*GetTransactionsByUserResponse) Descriptor() ([]byte, []int) {
-	return file_proto_transaction_proto_rawDescGZIP(), []int{4}
+	return file_proto_transaction_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *GetTransactionsByUserResponse) GetTransactions() []*Transaction {
@@ -462,7 +743,7 @@ var File_proto_transaction_proto protoreflect.FileDescriptor
 
 const file_proto_transaction_proto_rawDesc = "" +
 	"\n" +
-	"\x17proto/transaction.proto\x12\vtransaction\"\x9c\x04\n" +
+	"\x17proto/transaction.proto\x12\vtransaction\"\xce\x04\n" +
 	"\vTransaction\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
 	"\tsender_id\x18\x02 \x01(\tR\bsenderId\x12*\n" +
@@ -482,7 +763,8 @@ const file_proto_transaction_proto_rawDesc = "" +
 	"\vcall_number\x18\x0e \x01(\tR\n" +
 	"callNumber\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\x0f \x01(\tR\tcreatedAt\"\xa8\x02\n" +
+	"created_at\x18\x0f \x01(\tR\tcreatedAt\x120\n" +
+	"\x04type\x18\x10 \x01(\x0e2\x1c.transaction.TransactionTypeR\x04type\"\xa8\x02\n" +
 	"\x18CreateTransactionRequest\x122\n" +
 	"\x15sender_account_number\x18\x01 \x01(\tR\x13senderAccountNumber\x126\n" +
 	"\x17receiver_account_number\x18\x02 \x01(\tR\x15receiverAccountNumber\x12\x16\n" +
@@ -494,6 +776,20 @@ const file_proto_transaction_proto_rawDesc = "" +
 	"\vcall_number\x18\b \x01(\tR\n" +
 	"callNumber\"W\n" +
 	"\x19CreateTransactionResponse\x12:\n" +
+	"\vtransaction\x18\x01 \x01(\v2\x18.transaction.TransactionR\vtransaction\"\x7f\n" +
+	"\x0eDepositRequest\x12%\n" +
+	"\x0eaccount_number\x18\x01 \x01(\tR\raccountNumber\x12\x16\n" +
+	"\x06amount\x18\x02 \x01(\x01R\x06amount\x12\x1a\n" +
+	"\bcurrency\x18\x03 \x01(\tR\bcurrency\x12\x12\n" +
+	"\x04note\x18\x04 \x01(\tR\x04note\"M\n" +
+	"\x0fDepositResponse\x12:\n" +
+	"\vtransaction\x18\x01 \x01(\v2\x18.transaction.TransactionR\vtransaction\"\x80\x01\n" +
+	"\x0fWithdrawRequest\x12%\n" +
+	"\x0eaccount_number\x18\x01 \x01(\tR\raccountNumber\x12\x16\n" +
+	"\x06amount\x18\x02 \x01(\x01R\x06amount\x12\x1a\n" +
+	"\bcurrency\x18\x03 \x01(\tR\bcurrency\x12\x12\n" +
+	"\x04note\x18\x04 \x01(\tR\x04note\"N\n" +
+	"\x10WithdrawResponse\x12:\n" +
 	"\vtransaction\x18\x01 \x01(\v2\x18.transaction.TransactionR\vtransaction\"7\n" +
 	"\x1cGetTransactionsByUserRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\"]\n" +
@@ -502,9 +798,15 @@ const file_proto_transaction_proto_rawDesc = "" +
 	"\x11TransactionStatus\x12\f\n" +
 	"\bAPPROVED\x10\x00\x12\v\n" +
 	"\aPENDING\x10\x01\x12\f\n" +
-	"\bDECLINED\x10\x022\xe8\x01\n" +
+	"\bDECLINED\x10\x02*:\n" +
+	"\x0fTransactionType\x12\f\n" +
+	"\bTRANSFER\x10\x00\x12\v\n" +
+	"\aDEPOSIT\x10\x01\x12\f\n" +
+	"\bWITHDRAW\x10\x022\xf7\x02\n" +
 	"\x12TransactionService\x12b\n" +
-	"\x11CreateTransaction\x12%.transaction.CreateTransactionRequest\x1a&.transaction.CreateTransactionResponse\x12n\n" +
+	"\x11CreateTransaction\x12%.transaction.CreateTransactionRequest\x1a&.transaction.CreateTransactionResponse\x12D\n" +
+	"\aDeposit\x12\x1b.transaction.DepositRequest\x1a\x1c.transaction.DepositResponse\x12G\n" +
+	"\bWithdraw\x12\x1c.transaction.WithdrawRequest\x1a\x1d.transaction.WithdrawResponse\x12n\n" +
 	"\x15GetTransactionsByUser\x12).transaction.GetTransactionsByUserRequest\x1a*.transaction.GetTransactionsByUserResponseB\tZ\a./protob\x06proto3"
 
 var (
@@ -519,29 +821,41 @@ func file_proto_transaction_proto_rawDescGZIP() []byte {
 	return file_proto_transaction_proto_rawDescData
 }
 
-var file_proto_transaction_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_proto_transaction_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_proto_transaction_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_proto_transaction_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_proto_transaction_proto_goTypes = []any{
 	(TransactionStatus)(0),                // 0: transaction.TransactionStatus
-	(*Transaction)(nil),                   // 1: transaction.Transaction
-	(*CreateTransactionRequest)(nil),      // 2: transaction.CreateTransactionRequest
-	(*CreateTransactionResponse)(nil),     // 3: transaction.CreateTransactionResponse
-	(*GetTransactionsByUserRequest)(nil),  // 4: transaction.GetTransactionsByUserRequest
-	(*GetTransactionsByUserResponse)(nil), // 5: transaction.GetTransactionsByUserResponse
+	(TransactionType)(0),                  // 1: transaction.TransactionType
+	(*Transaction)(nil),                   // 2: transaction.Transaction
+	(*CreateTransactionRequest)(nil),      // 3: transaction.CreateTransactionRequest
+	(*CreateTransactionResponse)(nil),     // 4: transaction.CreateTransactionResponse
+	(*DepositRequest)(nil),                // 5: transaction.DepositRequest
+	(*DepositResponse)(nil),               // 6: transaction.DepositResponse
+	(*WithdrawRequest)(nil),               // 7: transaction.WithdrawRequest
+	(*WithdrawResponse)(nil),              // 8: transaction.WithdrawResponse
+	(*GetTransactionsByUserRequest)(nil),  // 9: transaction.GetTransactionsByUserRequest
+	(*GetTransactionsByUserResponse)(nil), // 10: transaction.GetTransactionsByUserResponse
 }
 var file_proto_transaction_proto_depIdxs = []int32{
-	0, // 0: transaction.Transaction.status:type_name -> transaction.TransactionStatus
-	1, // 1: transaction.CreateTransactionResponse.transaction:type_name -> transaction.Transaction
-	1, // 2: transaction.GetTransactionsByUserResponse.transactions:type_name -> transaction.Transaction
-	2, // 3: transaction.TransactionService.CreateTransaction:input_type -> transaction.CreateTransactionRequest
-	4, // 4: transaction.TransactionService.GetTransactionsByUser:input_type -> transaction.GetTransactionsByUserRequest
-	3, // 5: transaction.TransactionService.CreateTransaction:output_type -> transaction.CreateTransactionResponse
-	5, // 6: transaction.TransactionService.GetTransactionsByUser:output_type -> transaction.GetTransactionsByUserResponse
-	5, // [5:7] is the sub-list for method output_type
-	3, // [3:5] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	0,  // 0: transaction.Transaction.status:type_name -> transaction.TransactionStatus
+	1,  // 1: transaction.Transaction.type:type_name -> transaction.TransactionType
+	2,  // 2: transaction.CreateTransactionResponse.transaction:type_name -> transaction.Transaction
+	2,  // 3: transaction.DepositResponse.transaction:type_name -> transaction.Transaction
+	2,  // 4: transaction.WithdrawResponse.transaction:type_name -> transaction.Transaction
+	2,  // 5: transaction.GetTransactionsByUserResponse.transactions:type_name -> transaction.Transaction
+	3,  // 6: transaction.TransactionService.CreateTransaction:input_type -> transaction.CreateTransactionRequest
+	5,  // 7: transaction.TransactionService.Deposit:input_type -> transaction.DepositRequest
+	7,  // 8: transaction.TransactionService.Withdraw:input_type -> transaction.WithdrawRequest
+	9,  // 9: transaction.TransactionService.GetTransactionsByUser:input_type -> transaction.GetTransactionsByUserRequest
+	4,  // 10: transaction.TransactionService.CreateTransaction:output_type -> transaction.CreateTransactionResponse
+	6,  // 11: transaction.TransactionService.Deposit:output_type -> transaction.DepositResponse
+	8,  // 12: transaction.TransactionService.Withdraw:output_type -> transaction.WithdrawResponse
+	10, // 13: transaction.TransactionService.GetTransactionsByUser:output_type -> transaction.GetTransactionsByUserResponse
+	10, // [10:14] is the sub-list for method output_type
+	6,  // [6:10] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_proto_transaction_proto_init() }
@@ -554,8 +868,8 @@ func file_proto_transaction_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_transaction_proto_rawDesc), len(file_proto_transaction_proto_rawDesc)),
-			NumEnums:      1,
-			NumMessages:   5,
+			NumEnums:      2,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
