@@ -11,6 +11,7 @@ export default function RootLayout() {
           animation: "none",
         }}
       >
+        <Stack.Screen name="home" />
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(app)" />
       </Stack>
