@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "start": "node dist/server.ts",
-    "proto:generate": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=src/proto/ src/proto/auth.proto src/proto/account.proto"
+    "proto:generate": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=src/proto/ src/proto/auth.proto src/proto/account.proto src/proto/transaction.proto"
   },
   "keywords": [],
   "author": "",
