@@ -4,11 +4,14 @@ import { CameraView, Camera } from "expo-camera";
 import { useRouter } from "expo-router";
 import { colors } from "@styles/colors";
 import { Ionicons } from "@expo/vector-icons";
+import { parseNBSIpsQR } from "@services/qr-parser";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function QRScannerScreen() {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState(false);
   const router = useRouter();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     const getCameraPermissions = async () => {
@@ -19,6 +22,13 @@ export default function QRScannerScreen() {
     getCameraPermissions();
   }, []);
 
+  // Reset scan flag whenever screen gains focus
+  useEffect(() => {
+    if (isFocused) {
+      setScanned(false);
+    }
+  }, [isFocused]);
+
   const handleBarCodeScanned = ({
     type,
     data,
@@ -27,18 +37,47 @@ export default function QRScannerScreen() {
     data: string;
   }) => {
     setScanned(true);
-    Alert.alert("QR Code Scanned", `Data: ${data}`, [
-      {
-        text: "Scan Again",
-        onPress: () => setScanned(false),
-      },
-      {
-        text: "OK",
-        onPress: () => router.back(),
-      },
-    ]);
-    // TODO: Process payment data
-    console.log("QR Code data:", data);
+    // Try to parse NBS IPS QR code
+    console.log("Scanned data: ", data);
+    const qrData = parseNBSIpsQR(data);
+
+    if (qrData) {
+      // Valid QR code - navigate to new payment with pre-filled data
+      router.push({
+        pathname: "/(app)/new-payment",
+        params: {
+          fromQR: "true",
+          recipientName: qrData.recipientName,
+          recipientAccount: qrData.recipientAccount,
+          amount: qrData.amount.toString(),
+          currency: qrData.currency,
+          model: qrData.model || "",
+          paymentCode: qrData.paymentCode || "",
+          callNumber: qrData.callNumber || "",
+          note: qrData.purpose || "",
+        },
+      });
+    } else {
+      // Invalid QR code - show options
+      Alert.alert(
+        "Invalid QR Code",
+        "The QR code does not contain valid payment data.",
+        [
+          {
+            text: "Scan Again",
+            onPress: () => setScanned(false),
+          },
+          {
+            text: "Enter Manually",
+            onPress: () => router.push("/(app)/new-payment"),
+          },
+          {
+            text: "Cancel",
+            onPress: () => router.back(),
+          },
+        ],
+      );
+    }
   };
 
   if (hasPermission === null) {
@@ -62,14 +101,17 @@ export default function QRScannerScreen() {
 
   return (
     <View style={styles.container}>
-      <CameraView
-        style={styles.camera}
-        barcodeScannerSettings={{
-          barcodeTypes: ["qr"],
-        }}
-        onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
-      >
-        <View style={styles.overlay}>
+      <View style={styles.cameraContainer}>
+        <CameraView
+          style={styles.camera}
+          barcodeScannerSettings={{
+            barcodeTypes: ["qr"],
+          }}
+          onBarcodeScanned={
+            isFocused && !scanned ? handleBarCodeScanned : undefined
+          }
+        />
+        <View style={styles.overlay} pointerEvents="box-none">
           <View style={styles.topOverlay} />
           <View style={styles.middleRow}>
             <View style={styles.sideOverlay} />
@@ -94,7 +136,7 @@ export default function QRScannerScreen() {
             </TouchableOpacity>
           </View>
         </View>
-      </CameraView>
+      </View>
     </View>
   );
 }
@@ -106,12 +148,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  camera: {
+  cameraContainer: {
     flex: 1,
     width: "100%",
+    position: "relative",
+  },
+  camera: {
+    ...StyleSheet.absoluteFillObject,
   },
   overlay: {
-    flex: 1,
+    ...StyleSheet.absoluteFillObject,
   },
   topOverlay: {
     flex: 1,

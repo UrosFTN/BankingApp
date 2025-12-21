@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { colors } from "@styles/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useAccountStore } from "../../store/accountStore";
@@ -17,6 +17,7 @@ import { useTransactionStore } from "../../store/transactionStore";
 
 const NewPaymentScreen = () => {
   const router = useRouter();
+  const params = useLocalSearchParams();
   const { selectedAccount, setSelectedAccount } = useAccountStore();
   const { createTransaction } = useTransactionStore();
 
@@ -30,10 +31,25 @@ const NewPaymentScreen = () => {
   const [model, setModel] = useState("");
   const [callNumber, setCallNumber] = useState("");
   const [amount, setAmount] = useState("");
-  const [currency, setCurrency] = useState("EUR");
+  const [currency, setCurrency] = useState("RSD");
   const [paymentCode, setPaymentCode] = useState("");
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  // Pre-fill form if coming from QR scanner
+  useEffect(() => {
+    if (params.fromQR === "true") {
+      if (params.recipientName) setRecipientName(String(params.recipientName));
+      if (params.recipientAccount)
+        setRecipientAccount(String(params.recipientAccount));
+      if (params.amount) setAmount(String(params.amount));
+      if (params.currency) setCurrency(String(params.currency));
+      if (params.model) setModel(String(params.model));
+      if (params.paymentCode) setPaymentCode(String(params.paymentCode));
+      if (params.callNumber) setCallNumber(String(params.callNumber));
+      if (params.note) setNote(String(params.note));
+    }
+  }, [params]);
 
   const handleSubmit = async () => {
     if (!selectedAccount) {
@@ -202,10 +218,10 @@ const NewPaymentScreen = () => {
                 style={styles.picker}
                 dropdownIconColor={colors.lime}
               >
+                <Picker.Item label="RSD" value="RSD" />
                 <Picker.Item label="EUR" value="EUR" />
                 <Picker.Item label="USD" value="USD" />
                 <Picker.Item label="GBP" value="GBP" />
-                <Picker.Item label="RSD" value="RSD" />
               </Picker>
             </View>
           </View>
