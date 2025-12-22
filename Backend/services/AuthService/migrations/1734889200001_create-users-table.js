@@ -9,41 +9,39 @@ exports.shorthands = undefined;
  * @returns {Promise<void> | void}
  */
 exports.up = (pgm) => {
-  pgm.createTable("password_reset_tokens", {
+  pgm.createTable("users", {
     id: {
       type: "uuid",
       primaryKey: true,
       default: pgm.func("gen_random_uuid()"),
     },
-    token: {
-      type: "text",
+    email: {
+      type: "varchar(255)",
       notNull: true,
       unique: true,
     },
-    user_id: {
-      type: "uuid",
-      notNull: true,
-      references: "users(id)",
-      onDelete: "CASCADE",
-    },
-    expires_at: {
-      type: "timestamp",
+    password_hash: {
+      type: "text",
       notNull: true,
     },
-    used: {
-      type: "boolean",
+    role: {
+      type: "varchar(50)",
       notNull: true,
-      default: false,
+      default: "USER",
     },
     created_at: {
       type: "timestamp",
       notNull: true,
       default: pgm.func("current_timestamp"),
     },
+    updated_at: {
+      type: "timestamp",
+      notNull: true,
+      default: pgm.func("current_timestamp"),
+    },
   });
 
-  pgm.createIndex("password_reset_tokens", "token");
-  pgm.createIndex("password_reset_tokens", "user_id");
+  pgm.createIndex("users", "email");
 };
 
 /**
@@ -51,7 +49,6 @@ exports.up = (pgm) => {
  * @param run {() => void | undefined}
  * @returns {Promise<void> | void}
  */
-
 exports.down = (pgm) => {
-  pgm.dropTable("password_reset_tokens");
+  pgm.dropTable("users");
 };

@@ -3,11 +3,7 @@ import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import dotenv from "dotenv";
 import { serverConfig } from "./config";
-import {
-  authController,
-  deviceController,
-  passwordController,
-} from "./controllers";
+import { authController, passwordController } from "./controllers";
 import logger from "./utils/logger";
 
 dotenv.config();
@@ -29,15 +25,10 @@ export const server = new grpc.Server();
 server.addService(authProto.AuthService.service, {
   Register: authController.register.bind(authController),
   Login: authController.login.bind(authController),
-  LoginWithDevice: deviceController.loginWithDevice.bind(deviceController),
   RefreshToken: authController.refreshToken.bind(authController),
   RevokeToken: authController.revokeToken.bind(authController),
   ValidateToken: authController.validateToken.bind(authController),
-  RegisterDevice: deviceController.registerDevice.bind(deviceController),
-  GetUserDevices: deviceController.getUserDevices.bind(deviceController),
-  RevokeDevice: deviceController.revokeDevice.bind(deviceController),
-  RequestPasswordReset:
-    passwordController.requestPasswordReset.bind(passwordController),
+  RequestPasswordReset: passwordController.requestPasswordReset.bind(passwordController),
   ResetPassword: passwordController.resetPassword.bind(passwordController),
   ChangePassword: passwordController.changePassword.bind(passwordController),
 });
