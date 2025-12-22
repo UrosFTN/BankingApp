@@ -9,24 +9,13 @@ service AuthService {
   rpc Register (RegisterRequest) returns (AuthResponse);
   // Login authenticates a user with email and password
   rpc Login (LoginRequest) returns (AuthResponse);
-  // LoginWithDevice authenticates a user using a registered device token
-  rpc LoginWithDevice (DeviceLoginRequest) returns (AuthResponse);
-  
-  // Token Management
+   // Token Management
   // RefreshToken generates a new access token using a refresh token
   rpc RefreshToken (RefreshTokenRequest) returns (AuthResponse);
   // RevokeToken invalidates a refresh token
   rpc RevokeToken (RevokeTokenRequest) returns (EmptyResponse);
   // ValidateToken checks if an access token is valid
   rpc ValidateToken (ValidateTokenRequest) returns (ValidateTokenResponse);
-  
-  // Device Management
-  // RegisterDevice registers a new trusted device for a user
-  rpc RegisterDevice (RegisterDeviceRequest) returns (RegisterDeviceResponse);
-  // GetUserDevices retrieves all registered devices for a user
-  rpc GetUserDevices (GetUserDevicesRequest) returns (GetUserDevicesResponse);
-  // RevokeDevice removes a registered device
-  rpc RevokeDevice (RevokeDeviceRequest) returns (EmptyResponse);
   
   // Password Management
   // RequestPasswordReset initiates a password reset request
@@ -51,9 +40,6 @@ message LoginRequest {
   string password = 2;
 }
 
-message DeviceLoginRequest {
-  string device_token = 1;
-}
 
 // Auth Response (used for login, register, refresh)
 message AuthResponse {
@@ -87,39 +73,6 @@ message ValidateTokenResponse {
   string message = 5;
 }
 
-// Device Management
-message RegisterDeviceRequest {
-  string user_id = 1;
-  string device_id = 2;
-  string device_name = 3;
-}
-
-message RegisterDeviceResponse {
-  bool success = 1;
-  string message = 2;
-  string device_token = 3;
-}
-
-message GetUserDevicesRequest {
-  string user_id = 1;
-}
-
-message GetUserDevicesResponse {
-  repeated Device devices = 1;
-}
-
-message Device {
-  string id = 1;
-  string device_id = 2;
-  string device_name = 3;
-  string last_used_at = 4;
-  string created_at = 5;
-}
-
-message RevokeDeviceRequest {
-  string user_id = 1;
-  string device_id = 2;
-}
 
 // Password Management
 message PasswordResetRequest {
