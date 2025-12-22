@@ -39,8 +39,8 @@ func (s *AccountService) CreateAccount(ctx context.Context, req *proto.CreateAcc
         "account_type": req.AccountType,
     }).Info("Creating new account")
 
-    accountNumber := fmt.Sprintf("ACC%s%d", userID.String()[:8], time.Now().Unix())
-    iban := fmt.Sprintf("US%s%d", userID.String()[:8], time.Now().Unix())
+    accountNumber := fmt.Sprintf("%d%d", time.Now().Unix(), userID.ID()&0xFFFFFF)
+		iban := fmt.Sprintf("RS%d%010d", time.Now().Unix()%100000000, userID.ID()&0xFFFFFFFF)
 
     account := &models.Account{
         UserID:            userID,
