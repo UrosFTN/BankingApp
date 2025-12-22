@@ -54,37 +54,6 @@ const authRoutes: FastifyPluginAsync = async (fastify: FastifyInstance) => {
     return authClient.revokeToken({ refresh_token });
   });
 
-  // Device register uses bearer-derived user_id
-  fastify.post("/device/register", async (request) => {
-    const userId = (request as any).user?.id;
-    const { device_id, device_name } = request.body as any;
-    return authClient.registerDevice({
-      user_id: String(userId),
-      device_id,
-      device_name,
-    });
-  });
-
-  fastify.post("/device/login", async (request) => {
-    const { device_token } = request.body as any;
-    return authClient.loginWithDevice({ device_token });
-  });
-
-  // List devices for bearer-derived user_id (ignore path param)
-  fastify.get("/devices/:userId", async (request) => {
-    const userId = (request as any).user?.id;
-    return authClient.getUserDevices({ user_id: String(userId) });
-  });
-
-  fastify.delete("/devices/:userId/:deviceId", async (request) => {
-    const userId = (request as any).user?.id;
-    const { deviceId } = request.params as any;
-    return authClient.revokeDevice({
-      user_id: String(userId),
-      device_id: deviceId,
-    });
-  });
-
   fastify.post("/password/reset-request", async (request) => {
     const { email } = request.body as any;
     return authClient.requestPasswordReset({ email });

@@ -21,10 +21,7 @@ class AuthGrpcClient {
   constructor() {
     const { host, port } = servicesConfig.auth;
     const target = `${host}:${port}`;
-    this.client = new authPackage.AuthService(
-      target,
-      grpc.credentials.createInsecure(),
-    );
+    this.client = new authPackage.AuthService(target, grpc.credentials.createInsecure());
   }
 
   private call(method: string, data: any): Promise<any> {
@@ -62,26 +59,6 @@ class AuthGrpcClient {
     return this.call("RevokeToken", data);
   }
 
-  registerDevice(data: {
-    user_id: string;
-    device_id: string;
-    device_name: string;
-  }) {
-    return this.call("RegisterDevice", data);
-  }
-
-  loginWithDevice(data: { device_token: string }) {
-    return this.call("LoginWithDevice", data);
-  }
-
-  getUserDevices(data: { user_id: string }) {
-    return this.call("GetUserDevices", data);
-  }
-
-  revokeDevice(data: { user_id: string; device_id: string }) {
-    return this.call("RevokeDevice", data);
-  }
-
   requestPasswordReset(data: { email: string }) {
     return this.call("RequestPasswordReset", data);
   }
@@ -90,11 +67,7 @@ class AuthGrpcClient {
     return this.call("ResetPassword", data);
   }
 
-  changePassword(data: {
-    user_id: string;
-    old_password: string;
-    new_password: string;
-  }) {
+  changePassword(data: { user_id: string; old_password: string; new_password: string }) {
     return this.call("ChangePassword", data);
   }
 }

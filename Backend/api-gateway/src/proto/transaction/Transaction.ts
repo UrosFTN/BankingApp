@@ -1,6 +1,7 @@
 // Original file: src/proto/transaction.proto
 
 import type { TransactionStatus as _transaction_TransactionStatus, TransactionStatus__Output as _transaction_TransactionStatus__Output } from '../transaction/TransactionStatus';
+import type { TransactionType as _transaction_TransactionType, TransactionType__Output as _transaction_TransactionType__Output } from '../transaction/TransactionType';
 
 export interface Transaction {
   'id'?: (string);
@@ -18,6 +19,7 @@ export interface Transaction {
   'model'?: (string);
   'callNumber'?: (string);
   'createdAt'?: (string);
+  'type'?: (_transaction_TransactionType);
 }
 
 export interface Transaction__Output {
@@ -36,4 +38,5 @@ export interface Transaction__Output {
   'model': (string);
   'callNumber': (string);
   'createdAt': (string);
+  'type': (_transaction_TransactionType__Output);
 }
