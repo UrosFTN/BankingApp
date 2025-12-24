@@ -21,12 +21,9 @@ const AccountDetailsScreen = () => {
   const router = useRouter();
   const { selectedAccount } = useAccountStore();
   const { user } = useAuthStore();
-  const { deposit, withdraw, isLoading, error, clearError } =
-    useTransactionStore();
+  const { deposit, withdraw, isLoading, error, clearError } = useTransactionStore();
   const [modalVisible, setModalVisible] = useState(false);
-  const [transactionType, setTransactionType] = useState<
-    "deposit" | "withdraw"
-  >("deposit");
+  const [transactionType, setTransactionType] = useState<"deposit" | "withdraw">("deposit");
   const [amount, setAmount] = useState("");
 
   if (!selectedAccount) {
@@ -45,8 +42,7 @@ const AccountDetailsScreen = () => {
     });
   };
 
-  const capitalize = (str: string) =>
-    str ? str.charAt(0).toUpperCase() + str.slice(1) : str;
+  const capitalize = (str: string) => (str ? str.charAt(0).toUpperCase() + str.slice(1) : str);
 
   const handleOpenModal = (type: "deposit" | "withdraw") => {
     setTransactionType(type);
@@ -89,10 +85,7 @@ const AccountDetailsScreen = () => {
       );
       handleCloseModal();
     } catch (err: any) {
-      Alert.alert(
-        "Transaction Failed",
-        error || "An error occurred during the transaction",
-      );
+      Alert.alert("Transaction Failed", error || "An error occurred during the transaction");
     }
   };
 
@@ -106,9 +99,7 @@ const AccountDetailsScreen = () => {
 
           <View style={styles.row}>
             <Text style={styles.label}>Account Type</Text>
-            <Text style={styles.value}>
-              {capitalize(selectedAccount.account_type)}
-            </Text>
+            <Text style={styles.value}>{capitalize(selectedAccount.account_type)}</Text>
           </View>
 
           <View style={styles.row}>
@@ -130,9 +121,7 @@ const AccountDetailsScreen = () => {
 
           <View style={styles.row}>
             <Text style={styles.label}>Account Holder</Text>
-            <Text style={styles.value}>
-              {selectedAccount.account_holder_name}
-            </Text>
+            <Text style={styles.value}>{selectedAccount.account_holder_name}</Text>
           </View>
         </View>
 
@@ -147,11 +136,7 @@ const AccountDetailsScreen = () => {
               style={styles.actionButton}
               onPress={() => handleOpenModal("withdraw")}
             >
-              <Ionicons
-                name="arrow-down-circle"
-                size={20}
-                color={colors.white}
-              />
+              <Ionicons name="arrow-down-circle" size={20} color={colors.white} />
               <Text style={styles.buttonText}>Withdraw</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -169,34 +154,12 @@ const AccountDetailsScreen = () => {
 
           <View style={styles.row}>
             <Text style={styles.label}>Created</Text>
-            <Text style={styles.value}>
-              {formatDate(selectedAccount.created_at)}
-            </Text>
+            <Text style={styles.value}>{formatDate(selectedAccount.created_at)}</Text>
           </View>
 
           <View style={styles.row}>
             <Text style={styles.label}>Last Updated</Text>
-            <Text style={styles.value}>
-              {formatDate(selectedAccount.updated_at)}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>IDs</Text>
-
-          <View style={styles.row}>
-            <Text style={styles.label}>Account ID</Text>
-            <Text style={[styles.value, styles.monospace]}>
-              {selectedAccount.id}
-            </Text>
-          </View>
-
-          <View style={styles.row}>
-            <Text style={styles.label}>User ID</Text>
-            <Text style={[styles.value, styles.monospace]}>
-              {selectedAccount.user_id}
-            </Text>
+            <Text style={styles.value}>{formatDate(selectedAccount.updated_at)}</Text>
           </View>
         </View>
       </ScrollView>
@@ -243,9 +206,7 @@ const AccountDetailsScreen = () => {
                 {isLoading ? (
                   <ActivityIndicator color={colors.background} size="small" />
                 ) : (
-                  <Text style={styles.confirmButtonText}>
-                    {capitalize(transactionType)}
-                  </Text>
+                  <Text style={styles.confirmButtonText}>{capitalize(transactionType)}</Text>
                 )}
               </TouchableOpacity>
             </View>
