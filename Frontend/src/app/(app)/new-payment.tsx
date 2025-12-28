@@ -30,11 +30,11 @@ const NewPaymentScreen = () => {
   }, [setSelectedAccount]);
 
   const [recipientName, setRecipientName] = useState("");
-  const [recipientAccount, setRecipientAccount] = useState("ACC");
+  const [recipientAccount, setRecipientAccount] = useState("");
   const [model, setModel] = useState("");
   const [callNumber, setCallNumber] = useState("");
   const [amount, setAmount] = useState("");
-  const [currency, setCurrency] = useState(CURRENCIES[0]); // Always start with "RSD"
+  const [currency, setCurrency] = useState("RSD"); // Always start with "RSD"
   const [paymentCode, setPaymentCode] = useState("");
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -43,10 +43,9 @@ const NewPaymentScreen = () => {
   useEffect(() => {
     if (!initializedRef.current && params.fromQR === "true") {
       if (params.recipientName) setRecipientName(String(params.recipientName));
-      if (params.recipientAccount)
-        setRecipientAccount(String(params.recipientAccount));
+      if (params.recipientAccount) setRecipientAccount(String(params.recipientAccount));
       if (params.amount) setAmount(String(params.amount));
-      if (params.currency) setCurrency(String(params.currency));
+      if (params.currency) setCurrency(CURRENCIES[parseInt(String(params.currency)) - 1]);
       if (params.model) setModel(String(params.model));
       if (params.paymentCode) setPaymentCode(String(params.paymentCode));
       if (params.callNumber) setCallNumber(String(params.callNumber));
@@ -64,29 +63,19 @@ const NewPaymentScreen = () => {
     if (selectedAccount.currency !== currency) {
       Alert.alert(
         "Currency mismatch",
-        `Your account currency is ${
-          selectedAccount.currency
-        }, but payment currency is ${
-          CURRENCIES[parseInt(currency) - 1]
-        }. Please match the currencies.`,
+        `Your account currency is ${selectedAccount.currency}, but payment currency is ${currency}. Please match the currencies.`,
       );
       return;
     }
 
     if (!recipientName.trim() || !recipientAccount.trim() || !amount.trim()) {
-      Alert.alert(
-        "Missing fields",
-        "Please fill recipient name, account, and amount.",
-      );
+      Alert.alert("Missing fields", "Please fill recipient name, account, and amount.");
       return;
     }
 
     const numericAmount = parseFloat(amount);
     if (Number.isNaN(numericAmount) || numericAmount <= 0) {
-      Alert.alert(
-        "Invalid amount",
-        "Please enter a valid amount greater than 0.",
-      );
+      Alert.alert("Invalid amount", "Please enter a valid amount greater than 0.");
       return;
     }
 
@@ -110,9 +99,7 @@ const NewPaymentScreen = () => {
       ]);
     } catch (error: any) {
       const message =
-        error?.response?.data?.message ||
-        error?.message ||
-        "Failed to create payment";
+        error?.response?.data?.message || error?.message || "Failed to create payment";
       Alert.alert("Payment failed", message);
       console.log(message);
     } finally {
@@ -133,23 +120,15 @@ const NewPaymentScreen = () => {
 
       <View style={styles.card}>
         <Text style={styles.cardTitle}>From account</Text>
-        <TouchableOpacity
-          style={styles.accountPicker}
-          onPress={handleChooseAccount}
-        >
+        <TouchableOpacity style={styles.accountPicker} onPress={handleChooseAccount}>
           <View>
             <Text style={styles.labelSmall}>Selected account</Text>
             {selectedAccount ? (
               <>
-                <Text style={styles.accountName}>
-                  {selectedAccount.account_type}
-                </Text>
-                <Text style={styles.accountNumber}>
-                  {selectedAccount.account_number}
-                </Text>
+                <Text style={styles.accountName}>{selectedAccount.account_type}</Text>
+                <Text style={styles.accountNumber}>{selectedAccount.account_number}</Text>
                 <Text style={styles.accountBalance}>
-                  {selectedAccount.balance.toFixed(2)}{" "}
-                  {selectedAccount.currency}
+                  {selectedAccount.balance.toFixed(2)} {selectedAccount.currency}
                 </Text>
               </>
             ) : (
@@ -268,10 +247,7 @@ const NewPaymentScreen = () => {
       </View>
 
       <View style={styles.buttonRow}>
-        <TouchableOpacity
-          style={[styles.button, styles.secondary]}
-          onPress={() => router.back()}
-        >
+        <TouchableOpacity style={[styles.button, styles.secondary]} onPress={() => router.back()}>
           <Text style={styles.secondaryText}>Cancel</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -279,9 +255,7 @@ const NewPaymentScreen = () => {
           onPress={handleSubmit}
           disabled={submitting}
         >
-          <Text style={styles.primaryText}>
-            {submitting ? "Submitting..." : "Submit Payment"}
-          </Text>
+          <Text style={styles.primaryText}>{submitting ? "Submitting..." : "Submit Payment"}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

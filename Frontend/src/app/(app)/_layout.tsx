@@ -15,7 +15,7 @@ export default function AppLayout() {
   async function handleLogout() {
     try {
       await logout();
-      router.push("/(auth)/login");
+      router.replace("home");
     } catch (err) {
       setLocalError(error);
     }
@@ -52,33 +52,17 @@ export default function AppLayout() {
 
       {/* Footer with Tabs */}
       <View style={styles.footer}>
-        <TouchableOpacity
-          style={styles.tabItem}
-          onPress={() => router.push("/(app)/accounts")}
-        >
+        <TouchableOpacity style={styles.tabItem} onPress={() => router.push("/(app)/accounts")}>
           <Text style={styles.tabText}>Accounts</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.tabItem}
-          onPress={() => router.push("/(app)/payments")}
-        >
+        <TouchableOpacity style={styles.tabItem} onPress={() => router.push("/(app)/payments")}>
           <Text style={styles.tabText}>Payment</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.tabItem}
-          onPress={() => router.push("/(app)/transactions")}
-        >
+        <TouchableOpacity style={styles.tabItem} onPress={() => router.push("/(app)/transactions")}>
           <Text style={styles.tabText}>Transactions</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.tabItem}
-          onPress={() => router.push("/(app)/profile")}
-        >
-          <Ionicons
-            name="person-circle-outline"
-            size={32}
-            color={colors.lime}
-          />
+        <TouchableOpacity style={styles.tabItem} onPress={() => router.push("/(app)/profile")}>
+          <Ionicons name="person-circle-outline" size={32} color={colors.lime} />
         </TouchableOpacity>
       </View>
     </SafeAreaView>

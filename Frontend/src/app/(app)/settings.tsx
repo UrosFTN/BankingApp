@@ -30,9 +30,7 @@ const SettingsScreen = () => {
       <Text style={styles.title}>Settings</Text>
 
       <TouchableOpacity style={styles.button} onPress={toggleFingerprint}>
-        <Text>
-          {enabled ? "Disable Fingerprint Login" : "Enable Fingerprint Login"}
-        </Text>
+        <Text>{enabled ? "Disable Fingerprint Login" : "Enable Fingerprint Login"}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -49,7 +47,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: colors.lime,
+    color: colors.white,
   },
   button: {
     backgroundColor: colors.primaryButton,
