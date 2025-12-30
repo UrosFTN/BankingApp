@@ -12,9 +12,8 @@ interface TransactionState {
   isLoading: boolean;
   error: string | null;
   loadTransactions: (userId: string) => Promise<void>;
-  createTransaction: (
-    payload: CreateTransactionRequest,
-  ) => Promise<Transaction>;
+  loadTransactionsByAccount: (accountNumber: string) => Promise<void>;
+  createTransaction: (payload: CreateTransactionRequest) => Promise<Transaction>;
   deposit: (payload: DepositRequest) => Promise<Transaction>;
   withdraw: (payload: WithdrawRequest) => Promise<Transaction>;
   clearError: () => void;
@@ -32,6 +31,17 @@ export const useTransactionStore = create<TransactionState>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const data = await transactionApi.getTransactionsByUser(userId);
+      set({ transactions: data, isLoading: false });
+    } catch (error: any) {
+      set({ error: getErrorMessage(error), isLoading: false });
+      throw error;
+    }
+  },
+
+  loadTransactionsByAccount: async (accountNumber: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const data = await transactionApi.getTransactionsByAccount(accountNumber);
       set({ transactions: data, isLoading: false });
     } catch (error: any) {
       set({ error: getErrorMessage(error), isLoading: false });

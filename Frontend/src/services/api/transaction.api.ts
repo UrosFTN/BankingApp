@@ -54,12 +54,10 @@ function normalizeTransaction(raw: any): Transaction {
     id: raw.id ?? raw.Id,
     sender_id: raw.sender_id ?? raw.SenderId,
     sender_account_id: raw.sender_account_id ?? raw.SenderAccountId,
-    sender_account_number:
-      raw.sender_account_number ?? raw.SenderAccountNumber ?? "",
+    sender_account_number: raw.sender_account_number ?? raw.SenderAccountNumber ?? "",
     receiver_id: raw.receiver_id ?? raw.ReceiverId,
     receiver_account_id: raw.receiver_account_id ?? raw.ReceiverAccountId,
-    receiver_account_number:
-      raw.receiver_account_number ?? raw.ReceiverAccountNumber ?? "",
+    receiver_account_number: raw.receiver_account_number ?? raw.ReceiverAccountNumber ?? "",
     amount: raw.amount ?? raw.Amount,
     currency: raw.currency ?? raw.Currency,
     status: (raw.status ?? raw.Status) as TransactionStatus,
@@ -72,9 +70,7 @@ function normalizeTransaction(raw: any): Transaction {
 }
 
 export const transactionApi = {
-  createTransaction: async (
-    payload: CreateTransactionRequest,
-  ): Promise<Transaction> => {
+  createTransaction: async (payload: CreateTransactionRequest): Promise<Transaction> => {
     const res = await client.post(basePath, payload);
     const data = res.data.transaction ?? res.data;
     return normalizeTransaction(data);
@@ -94,6 +90,12 @@ export const transactionApi = {
 
   getTransactionsByUser: async (userId: string): Promise<Transaction[]> => {
     const res = await client.get(basePath, { params: { userId } });
+    const list = res.data.transactions ?? res.data;
+    return Array.isArray(list) ? list.map(normalizeTransaction) : [];
+  },
+
+  getTransactionsByAccount: async (accountNumber: string): Promise<Transaction[]> => {
+    const res = await client.get(basePath, { params: { accountNumber } });
     const list = res.data.transactions ?? res.data;
     return Array.isArray(list) ? list.map(normalizeTransaction) : [];
   },

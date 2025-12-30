@@ -34,12 +34,9 @@ client.interceptors.response.use(
             ? await SecureStore.getItemAsync("refreshToken")
             : await AsyncStorage.getItem("refreshToken");
         if (refreshToken) {
-          const response = await axios.post(
-            `${API_BASE_URL}/api/auth/refresh`,
-            {
-              refresh_token: refreshToken,
-            },
-          );
+          const response = await axios.post(`${API_BASE_URL}/api/auth/refresh`, {
+            refresh_token: refreshToken,
+          });
           await AsyncStorage.setItem("accessToken", response.data.access_token);
           const newRefresh = response.data.refresh_token;
           if (fpEnabled === "true") {
